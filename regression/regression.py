@@ -23,12 +23,12 @@ import string
 import subprocess
 
 
-
 class RegressionTester:
-    """  """
+    """ A base class that is used to download the latest tarball or zip file of
+    to be tested for regressions.  """
 
     def __init__(self):
-        """  """
+        """ Sets up some constants. """
 
         self._repo_root = "http://github.com/mikhailberis/cpp-netlib/"
         self._boost_minimum_version = "1_40"
@@ -57,29 +57,32 @@ class RegressionTester:
         return params
 
     def download(self, branch):
-        """  """
+        """ Downloads the source.  This might be a package (tarball or zip). """
 
         raise NotImplementedError
 
     def get_commit(self, filename):
-        """  """
+        """ Gets the commit string which is used to identify the version of the
+        commit to be tested. """
 
         (root, ext) = os.path.splitext(filename)
         (root, ext) = os.path.splitext(root)
         return root.split("-")[-1]
     
     def unpack(self, filename):
-        """  """
+        """ Unpacks the package that was downloaded. """
 
         raise NotImplementedError
 
     def build(self, results, bjam):
-        """  """
+        """ Builds and runs the unit tests using bjam. """
 
         rc = subprocess.call(bjam, stdout=results, stderr=results)
 
     def run(self, runner, branch, bjam=None, user_config=None):
-        """  """
+        """ Runs the regression process, downloading the source and running the
+        tests. The results are stored in a file called
+        "cpp_netlib_regression.txt". """
         
         boost_params = self.check_boost_installation()
         assert(boost_params.version is not None)
