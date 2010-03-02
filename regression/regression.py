@@ -21,6 +21,8 @@ import urlparse
 import optparse
 import string
 import subprocess
+import time
+import datetime
 
 
 class RegressionTester:
@@ -56,18 +58,10 @@ class RegressionTester:
         params.version = version
         return params
 
-    def download(self, branch):
+    def download(self, branch, proxy):
         """ Downloads the source.  This might be a package (tarball or zip). """
 
         raise NotImplementedError
-
-    def get_commit(self, filename):
-        """ Gets the commit string which is used to identify the version of the
-        commit to be tested. """
-
-        (root, ext) = os.path.splitext(filename)
-        (root, ext) = os.path.splitext(root)
-        return root.split("-")[-1]
     
     def unpack(self, filename):
         """ Unpacks the package that was downloaded. """
@@ -79,37 +73,36 @@ class RegressionTester:
 
         rc = subprocess.call(bjam, stdout=results, stderr=results)
 
-    def run(self, runner, branch, bjam=None, user_config=None):
+    def run(self, runner, branch, proxy=None, bjam=None, user_config=None):
         """ Runs the regression process, downloading the source and running the
         tests. The results are stored in a file called
         "cpp_netlib_regression.txt". """
         
-        boost_params = self.check_boost_installation()
-        assert(boost_params.version is not None)
-        assert(boost_params.version > self._boost_minimum_version)
-
         results = "cpp_netlib_regression.txt"
-        results_file = open(results, "w+")
+        with open(results, "w+") as results_file:
+            boost_params = self.check_boost_installation()
+            assert(boost_params.version is not None)
+            assert(boost_params.version > self._boost_minimum_version)
         
-        filename = self.download(branch)
-        commit = self.get_commit(filename)
-        
-        self.unpack(filename)
+            (filename, commit) = self.download(branch, proxy)
+            self.unpack(filename)
 
-        if bjam is None:
-            bjam = "bjam"
+            if bjam is None:
+                bjam = "bjam"
     
-        if user_config is not None:
-            bjam = "%s --user-config=%s" % (bjam,u ser_config)
-        
-        self.build(results_file, bjam)
+            if user_config is not None:
+                bjam = "%s --user-config=%s" % (bjam, user_config)
 
-        results_file.write("\n\n")
-        results_file.write("runner: %s\n" % runner)
-        results_file.write("git_branch: %s\n" % branch)
-        results_file.write("boost_root: %s\n" % boost_params.root)
-        results_file.write("boost_version: %s\n" % boost_params.version)
-        results_file.write("commit: %s\n" % commit)
+            start = time.clock()
+            self.build(results_file, bjam)
+
+            results_file.write("\n\n")
+            results_file.write("runner: %s\n" % runner)
+            results_file.write("date: %s\n" % datetime.date.today())
+            results_file.write("git_branch: %s\n" % branch)
+            results_file.write("boost_version: %s\n" % boost_params.version)
+            results_file.write("commit: %s\n" % commit)
+            results_file.write("duration: %s\n" % (time.clock() - start))
 
         return results
 
@@ -120,14 +113,20 @@ class RegressionTesterWithTar(RegressionTester):
     def __init__(self):
         RegressionTester.__init__(self)
 
-    def download(self, branch):
+    def download(self, branch, proxy):
         """ Downloads the latest tarball from the mikhailberis fork. """
     
         r = urllib2.urlopen(self._repo_root + "tarball/" + branch)
         filename = urlparse.urlparse(r.geturl()).path.split("/")[-1]
-        f = open(filename, "w+")
-        f.write(r.read())
-        return filename
+
+        with open(filename, "wb+") as f:
+            f.write(r.read())
+
+        (root, ext) = os.path.splitext(filename)
+        (root, ext) = os.path.splitext(root)
+        commit = root.split("-")[-1]
+        
+        return (filename, commit)
 
     def unpack(self, filename):
         """ Unpacks the tarball into a stage directory. """
@@ -151,14 +150,33 @@ class RegressionTesterWithZip(RegressionTester):
     def __init__(self):
         RegressionTester.__init__(self)
         
-    def download(self, branch):
+    def download(self, branch, proxy):
         """ Downloads the latest zipfile from the mikhailberis fork. """
 
-        r = urllib2.urlopen(self._repo_root + "zipball/" + branch)
-        filename = urlparse.urlparse(r.geturl()).path.split("/")[-1]
-        f = open(filename, "w+")
-        f.write(r.read())
-        return filename
+        download_url = self._repo_root + "zipball/" + branch
+
+        if proxy is not None:
+            (username, password) = proxy
+            password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+            password_mgr.add_password(None,
+                                      download_url,
+                                      username, password)
+            auth_handler = urllib2.HTTPBasicAuthHandler(password_mgr)
+            opener = urllib2.build_opener(auth_handler)
+            urllib2.install_opener(opener)
+
+        request = urllib2.Request(download_url,
+                                  headers={"Content-Type": "application/zip"})
+        response = urllib2.urlopen(request)
+        filename = urlparse.urlparse(response.geturl()).path.split("/")[-1]
+        with open(filename, "wb+") as f:
+            f.write(response.read())
+
+        (root, ext) = os.path.splitext(filename)
+        (root, ext) = os.path.splitext(root)
+        commit = root.split("-")[-1]
+        
+        return (filename, commit)
 
     def unpack(self, filename):
         """ Unpacks the zip file into a stage directory. """
@@ -196,10 +214,16 @@ if __name__ == "__main__":
     opt.add_option("--user-config",
                    metavar="FILE",
                    help="the user-config file to use.")
+    opt.add_option("--proxy-user",
+                   metavar="USER",
+                   help="the proxy user name.")
+    opt.add_option("--proxy-password",
+                   metavar="PASS",
+                   help="the proxy password.")
     
     (opts, args) = opt.parse_args()
 
-    if opt.runner is None:
+    if opts.runner is None:
         opt.print_help()
         sys.exit(-1)
 
@@ -216,11 +240,16 @@ if __name__ == "__main__":
     elif opts.package == "tar":
         tester = RegressionTesterWithTar()
 
+    proxy = None
+    if opts.proxy_user is not None and opts.proxy_password is not None:
+        proxy = (opts.proxy_user, opts.proxy_password)
+
     try:
         results = tester.run(opts.runner,
                              opts.branch,
                              bjam=opts.bjam,
-                             user_config=opts.user_config)
+                             user_config=opts.user_config,
+                             proxy=proxy)
         print("The regression results are found in `%s`." % results)
         print("Please e-mail this to the project administrators at `cpp.netlib@gmail.com`")
     except Exception, e:
