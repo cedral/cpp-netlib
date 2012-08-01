@@ -17,6 +17,7 @@ template <
     class FwdIter
     >
 struct hierarchical_part {
+
     boost::optional<boost::iterator_range<FwdIter> > user_info;
     boost::optional<boost::iterator_range<FwdIter> > host;
     boost::optional<boost::iterator_range<FwdIter> > port;
@@ -54,7 +55,7 @@ struct hierarchical_part {
 
         if (!path) {
             path = boost::iterator_range<FwdIter>(boost::end(port.get()),
-                                                  boost::end(port.get()));
+												  boost::end(port.get()));
         }
     }
 
@@ -64,7 +65,8 @@ template <
     class FwdIter
     >
 struct uri_parts {
-boost::iterator_range<FwdIter> scheme;
+
+	boost::iterator_range<FwdIter> scheme;
     hierarchical_part<FwdIter> hier_part;
     boost::optional<boost::iterator_range<FwdIter> > query;
     boost::optional<boost::iterator_range<FwdIter> > fragment;

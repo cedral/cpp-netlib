@@ -55,7 +55,7 @@ bool operator == (const uri &lhs, const uri &rhs) {
 
 	if (equal) {
 		// test normalized paths
-		equal = boost::iequals(normalize_path(lhs.path_range()), normalize_path(rhs.path_range()));
+		equal = boost::iequals(normalize(lhs.path_range()), normalize(rhs.path_range()));
 	}
 
 	if (equal) {

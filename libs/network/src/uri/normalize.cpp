@@ -11,12 +11,37 @@
 # include <boost/algorithm/string/join.hpp>
 # include <boost/algorithm/string/predicate.hpp>
 # include <boost/algorithm/string/classification.hpp>
+# include <boost/algorithm/string/case_conv.hpp>
 # include <boost/range/as_literal.hpp>
 # include <boost/range/algorithm_ext/erase.hpp>
 # include <boost/range/algorithm/for_each.hpp>
 
 namespace network {
-uri::string_type normalize_path(const uri::const_range_type &path) {
+uri::string_type normalize(const uri::scheme_type &scheme) {
+	using namespace boost::algorithm;
+
+	uri::string_type normalized_scheme(std::begin(scheme), std::end(scheme));
+	to_lower<uri::string_type>(normalized_scheme);
+	return std::move(normalized_scheme);
+}
+
+uri::string_type normalize(const uri::user_info_type &user_info) {
+	return uri::string_type(std::begin(user_info), std::end(user_info));
+}
+
+uri::string_type normalize(const uri::host_type &host) {
+	using namespace boost::algorithm;
+
+	uri::string_type normalized_host(std::begin(host), std::end(host));
+	to_lower<uri::string_type>(normalized_host);
+	return std::move(normalized_host);
+}
+
+uri::string_type normalize(const uri::port_type &port) {
+	return uri::string_type(std::begin(port), std::end(port));
+}
+
+uri::string_type normalize(const uri::path_type &path) {
 	using namespace boost;
 	using namespace boost::algorithm;
 
@@ -52,5 +77,27 @@ uri::string_type normalize_path(const uri::const_range_type &path) {
 	}
 
 	return join(normalized_segments, "/");
+}
+
+uri::string_type normalize(const uri::query_type &query) {
+	return uri::string_type(std::begin(query), std::end(query));
+}
+
+uri::string_type normalize(const uri::fragment_type &fragment) {
+	return uri::string_type(std::begin(fragment), std::end(fragment));
+}
+
+uri normalize(const uri &uri_) {
+	uri normalized_uri;
+	builder(normalized_uri)
+		.scheme(scheme(uri_))
+		.user_info(user_info(uri_))
+		.host(host(uri_))
+		.port(port(uri_))
+		.path(path(uri_))
+		.query(query(uri_))
+		.fragment(fragment(uri_))
+		;
+	return std::move(normalized_uri);
 }
 } // namespace network

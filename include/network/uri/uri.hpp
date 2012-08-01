@@ -39,6 +39,134 @@ public:
     typedef string_type::const_iterator const_iterator;
     typedef boost::iterator_range<const_iterator> const_range_type;
 
+	struct scheme_type
+		: boost::iterator_range<const_iterator> {
+
+		scheme_type() {
+
+		}
+
+		scheme_type(const_iterator first, const_iterator last)
+			: boost::iterator_range<const_iterator>(first, last) {
+
+		}
+
+		scheme_type(boost::iterator_range<const_iterator> range)
+			: boost::iterator_range<const_iterator>(range) {
+
+		}
+
+	};
+
+	struct user_info_type
+		: boost::iterator_range<const_iterator> {
+
+		user_info_type() {
+
+		}
+
+		user_info_type(const_iterator first, const_iterator last)
+			: boost::iterator_range<const_iterator>(first, last) {
+
+		}
+
+		user_info_type(boost::iterator_range<const_iterator> range)
+			: boost::iterator_range<const_iterator>(range) {
+
+		}
+
+	};
+
+	struct host_type
+		: boost::iterator_range<const_iterator> {
+
+		host_type() {
+
+		}
+
+		host_type(const_iterator first, const_iterator last)
+			: boost::iterator_range<const_iterator>(first, last) {
+
+		}
+
+		host_type(boost::iterator_range<const_iterator> range)
+			: boost::iterator_range<const_iterator>(range) {
+
+		}
+
+	};
+
+	struct port_type
+		: boost::iterator_range<const_iterator> {
+
+		port_type() {
+
+		}
+
+		port_type(const_iterator first, const_iterator last)
+			: boost::iterator_range<const_iterator>(first, last) {
+
+		}
+
+		port_type(boost::iterator_range<const_iterator> range)
+			: boost::iterator_range<const_iterator>(range) {
+
+		}
+
+	};
+
+	struct path_type
+		: boost::iterator_range<const_iterator> {
+
+		path_type() {
+
+		}
+
+		path_type(boost::iterator_range<const_iterator> range)
+			: boost::iterator_range<const_iterator>(range) {
+
+		}
+
+	};
+
+	struct query_type
+		: boost::iterator_range<const_iterator> {
+
+		query_type() {
+
+		}
+
+		query_type(const_iterator first, const_iterator last)
+			: boost::iterator_range<const_iterator>(first, last) {
+
+		}
+
+		query_type(boost::iterator_range<const_iterator> range)
+			: boost::iterator_range<const_iterator>(range) {
+
+		}
+
+	};
+
+	struct fragment_type
+		: boost::iterator_range<const_iterator> {
+
+		fragment_type() {
+
+		}
+
+		fragment_type(const_iterator first, const_iterator last)
+			: boost::iterator_range<const_iterator>(first, last) {
+
+		}
+
+		fragment_type(boost::iterator_range<const_iterator> range)
+			: boost::iterator_range<const_iterator>(range) {
+
+		}
+
+	};
+
     uri()
         : is_valid_(false) {
 
@@ -92,78 +220,73 @@ public:
         return uri_.end();
     }
 
-    const_range_type scheme_range() const {
-        return uri_parts_.scheme;
+    scheme_type scheme_range() const {
+        return scheme_type(uri_parts_.scheme);
     }
 
-    const_range_type user_info_range() const {
+    user_info_type user_info_range() const {
         return uri_parts_.hier_part.user_info?
-            uri_parts_.hier_part.user_info.get() :
-            const_range_type();
+            user_info_type(uri_parts_.hier_part.user_info.get())
+			: user_info_type();
     }
 
-    const_range_type host_range() const {
+    host_type host_range() const {
         return uri_parts_.hier_part.host?
-            uri_parts_.hier_part.host.get() :
-            const_range_type();
+            host_type(uri_parts_.hier_part.host.get()) : host_type();
     }
 
-    const_range_type port_range() const {
+    port_type port_range() const {
         return uri_parts_.hier_part.port?
-            uri_parts_.hier_part.port.get() :
-            const_range_type();
+            port_type(uri_parts_.hier_part.port.get()) : port_type();
     }
 
-    const_range_type path_range() const {
+    path_type path_range() const {
         return uri_parts_.hier_part.path?
-            uri_parts_.hier_part.path.get() :
-            const_range_type();
+            path_type(uri_parts_.hier_part.path.get()) : path_type();
     }
 
-    const_range_type query_range() const {
+    query_type query_range() const {
         return uri_parts_.query ?
-            uri_parts_.query.get() :
-            const_range_type();
+            query_type(uri_parts_.query.get()) : query_type();
     }
 
-    const_range_type fragment_range() const {
+    fragment_type fragment_range() const {
         return uri_parts_.fragment?
-            uri_parts_.fragment.get() :
-            const_range_type();
+            fragment_type(uri_parts_.fragment.get()) : fragment_type();
     }
 
     string_type scheme() const {
-        const_range_type range = scheme_range();
+        auto range = scheme_range();
         return range? string_type(boost::begin(range), boost::end(range)) : string_type();
     }
 
     string_type user_info() const {
-        const_range_type range = user_info_range();
+        auto range = user_info_range();
         return range? string_type(boost::begin(range), boost::end(range)) : string_type();
     }
 
     string_type host() const {
-        const_range_type range = host_range();
+        auto range = host_range();
         return range? string_type(boost::begin(range), boost::end(range)) : string_type();
     }
 
     string_type port() const {
-        const_range_type range = port_range();
+        auto range = port_range();
         return range? string_type(boost::begin(range), boost::end(range)) : string_type();
     }
 
     string_type path() const {
-        const_range_type range = path_range();
+        auto range = path_range();
         return range? string_type(boost::begin(range), boost::end(range)) : string_type();
     }
 
     string_type query() const {
-        const_range_type range = query_range();
+        auto range = query_range();
         return range? string_type(boost::begin(range), boost::end(range)) : string_type();
     }
 
     string_type fragment() const {
-        const_range_type range = fragment_range();
+        auto range = fragment_range();
         return range? string_type(boost::begin(range), boost::end(range)) : string_type();
     }
 
@@ -200,12 +323,12 @@ private:
 
 inline
 void uri::parse() {
-    const_iterator first(boost::begin(uri_)), last(boost::end(uri_));
+    auto first(boost::begin(uri_)), last(boost::end(uri_));
     is_valid_ = detail::parse(first, last, uri_parts_);
     if (is_valid_) {
         if (!uri_parts_.scheme) {
-            uri_parts_.scheme = const_range_type(boost::begin(uri_),
-                                                 boost::begin(uri_));
+            uri_parts_.scheme = scheme_type(boost::begin(uri_),
+											boost::begin(uri_));
         }
         uri_parts_.update();
     }
@@ -233,7 +356,7 @@ uri::string_type port(const uri &uri_) {
 
 inline
 boost::optional<unsigned short> port_us(const uri &uri_) {
-    uri::string_type port = uri_.port();
+    auto port = uri_.port();
     return (port.empty())?
         boost::optional<unsigned short>() :
         boost::optional<unsigned short>(boost::lexical_cast<unsigned short>(port));
@@ -305,7 +428,7 @@ inline
 std::size_t hash_value(const uri &uri_)
 {
     std::size_t seed = 0;
-    for (uri::const_iterator it = boost::begin(uri_); it != boost::end(uri_); ++it) {
+    for (auto it = boost::begin(uri_); it != boost::end(uri_); ++it) {
         boost::hash_combine(seed, *it);
     }
     return seed;

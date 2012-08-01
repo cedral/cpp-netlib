@@ -234,8 +234,11 @@ struct uri_grammar : qi::grammar<
     qi::rule<const_iterator, boost::iterator_range<const_iterator>()>
     host, port;
 
+	qi::rule<const_iterator, boost::iterator_range<const_iterator>()>
+	scheme;
+
     qi::rule<const_iterator, boost::iterator_range<const_iterator>()>
-    scheme, user_info, query, fragment;
+    user_info, query, fragment;
 
     qi::rule<const_iterator, hierarchical_part<const_iterator>()>
     hier_part;
