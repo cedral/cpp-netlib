@@ -28,12 +28,14 @@ struct scheme_range
 
 	}
 
-	scheme_range(boost::iterator_range<FwdIter> range)
-		: boost::iterator_range<FwdIter>(range) {
-
-	}
-
 };
+
+template <
+	class FwdIter
+	>
+FwdIter begin(scheme_range<FwdIter> &range) {
+
+}
 
 template <
 	typename FwdIter
@@ -47,11 +49,6 @@ struct user_info_range
 
 	user_info_range(FwdIter first, FwdIter last)
 		: boost::iterator_range<FwdIter>(first, last) {
-
-	}
-
-	user_info_range(boost::iterator_range<FwdIter> range)
-		: boost::iterator_range<FwdIter>(range) {
 
 	}
 
@@ -72,11 +69,6 @@ struct host_range
 
 	}
 
-	host_range(boost::iterator_range<FwdIter> range)
-		: boost::iterator_range<FwdIter>(range) {
-
-	}
-
 };
 
 template <
@@ -94,11 +86,6 @@ struct port_range
 
 	}
 
-	port_range(boost::iterator_range<FwdIter> range)
-		: boost::iterator_range<FwdIter>(range) {
-
-	}
-
 };
 
 template <
@@ -111,8 +98,8 @@ struct path_range
 
 	}
 
-	path_range(boost::iterator_range<FwdIter> range)
-		: boost::iterator_range<FwdIter>(range) {
+	path_range(FwdIter first, FwdIter last)
+		: boost::iterator_range<FwdIter>(first, last) {
 
 	}
 
@@ -133,11 +120,6 @@ struct query_range
 
 	}
 
-	query_range(boost::iterator_range<FwdIter> range)
-		: boost::iterator_range<FwdIter>(range) {
-
-	}
-
 };
 
 template <
@@ -155,14 +137,8 @@ struct fragment_range
 
 	}
 
-	fragment_range(boost::iterator_range<FwdIter> range)
-		: boost::iterator_range<FwdIter>(range) {
-
-	}
-
 };
 } // namespace detail
 } // namespace network
-
 
 #endif // __NETWORK_URI_DETAIL_RANGES_INC__

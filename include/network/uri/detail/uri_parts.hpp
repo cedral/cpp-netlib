@@ -24,38 +24,38 @@ struct hierarchical_part {
     boost::optional<boost::iterator_range<FwdIter> > path;
 
     FwdIter begin() const {
-        return boost::begin(user_info);
+        return std::begin(user_info);
     }
 
     FwdIter end() const {
-        return boost::end(path);
+        return std::end(path);
     }
 
     void update() {
         if (!user_info) {
             if (host) {
-                user_info = boost::iterator_range<FwdIter>(boost::begin(host.get()),
-                                                           boost::begin(host.get()));
+                user_info = boost::iterator_range<FwdIter>(std::begin(host.get()),
+                                                           std::begin(host.get()));
             }
             else if (path) {
-                user_info = boost::iterator_range<FwdIter>(boost::begin(path.get()),
-                                                           boost::begin(path.get()));
+                user_info = boost::iterator_range<FwdIter>(std::begin(path.get()),
+                                                           std::begin(path.get()));
             }
         }
 
         if (!host) {
-            host = boost::iterator_range<FwdIter>(boost::begin(path.get()),
-                                                  boost::begin(path.get()));
+            host = boost::iterator_range<FwdIter>(std::begin(path.get()),
+                                                  std::begin(path.get()));
         }
 
         if (!port) {
-            port = boost::iterator_range<FwdIter>(boost::end(host.get()),
-                                                  boost::end(host.get()));
+            port = boost::iterator_range<FwdIter>(std::end(host.get()),
+                                                  std::end(host.get()));
         }
 
         if (!path) {
-            path = boost::iterator_range<FwdIter>(boost::end(port.get()),
-												  boost::end(port.get()));
+            path = boost::iterator_range<FwdIter>(std::end(port.get()),
+												  std::end(port.get()));
         }
     }
 
@@ -72,11 +72,11 @@ struct uri_parts {
     boost::optional<boost::iterator_range<FwdIter> > fragment;
 
     FwdIter begin() const {
-        return boost::begin(scheme);
+        return std::begin(scheme);
     }
 
     FwdIter end() const {
-        return boost::end(fragment);
+        return std::end(fragment);
     }
 
     void update() {
@@ -84,13 +84,13 @@ struct uri_parts {
         hier_part.update();
 
         if (!query) {
-            query = boost::iterator_range<FwdIter>(boost::end(hier_part.path.get()),
-                                                   boost::end(hier_part.path.get()));
+            query = boost::iterator_range<FwdIter>(std::end(hier_part.path.get()),
+                                                   std::end(hier_part.path.get()));
         }
 
         if (!fragment) {
-            fragment = boost::iterator_range<FwdIter>(boost::end(query.get()),
-                                                      boost::end(query.get()));
+            fragment = boost::iterator_range<FwdIter>(std::end(query.get()),
+                                                      std::end(query.get()));
         }
     }
 };

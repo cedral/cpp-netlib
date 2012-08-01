@@ -17,11 +17,13 @@
 
 namespace network {
 namespace details {
+namespace qi = boost::spirit::qi;
+
 template <
     typename Map
     >
 struct key_value_sequence
-    : boost::spirit::qi::grammar<uri::const_iterator, Map()>
+    : qi::grammar<uri::const_iterator, Map()>
 {
     typedef typename Map::key_type key_type;
     typedef typename Map::mapped_type mapped_type;
@@ -30,16 +32,16 @@ struct key_value_sequence
     key_value_sequence()
         : key_value_sequence::base_type(query)
     {
-        query =  pair >> *((boost::spirit::qi::lit(';') | '&') >> pair);
+        query =  pair >> *((qi::lit(';') | '&') >> pair);
         pair  =  key >> -('=' >> value);
-        key   =  boost::spirit::qi::char_("a-zA-Z_") >> *boost::spirit::qi::char_("a-zA-Z_0-9/%");
-        value = +boost::spirit::qi::char_("a-zA-Z_0-9/%");
+        key   =  qi::char_("a-zA-Z_") >> *qi::char_("a-zA-Z_0-9/%");
+        value = +qi::char_("a-zA-Z_0-9/%");
     }
 
-    boost::spirit::qi::rule<uri::const_iterator, Map()> query;
-    boost::spirit::qi::rule<uri::const_iterator, pair_type()> pair;
-    boost::spirit::qi::rule<uri::const_iterator, key_type()> key;
-    boost::spirit::qi::rule<uri::const_iterator, mapped_type()> value;
+    qi::rule<uri::const_iterator, Map()> query;
+    qi::rule<uri::const_iterator, pair_type()> pair;
+    qi::rule<uri::const_iterator, key_type()> key;
+    qi::rule<uri::const_iterator, mapped_type()> value;
 };
 } // namespace details
 
@@ -48,15 +50,17 @@ template <
     >
 inline
 Map &query_map(const uri &uri_, Map &map) {
-    auto range = uri_.query_range();
+	namespace qi = boost::spirit::qi;
+
+    auto range = uri_.query();
     details::key_value_sequence<Map> parser;
-    boost::spirit::qi::parse(std::begin(range), std::end(range), parser, map);
+    qi::parse(std::begin(range), std::end(range), parser, map);
     return map;
 }
 
 inline
 uri::string_type username(const uri &uri_) {
-    auto user_info = uri_.user_info_range();
+    auto user_info = uri_.user_info();
     auto it(std::begin(user_info)), end(std::end(user_info));
     for (; it != end; ++it) {
         if (*it == ':') {
@@ -68,7 +72,7 @@ uri::string_type username(const uri &uri_) {
 
 inline
 uri::string_type password(const uri &uri_) {
-    auto user_info = uri_.user_info_range();
+    auto user_info = uri_.user_info();
     auto it(std::begin(user_info)), end(std::end(user_info));
     for (; it != end; ++it) {
         if (*it == ':') {
@@ -80,21 +84,21 @@ uri::string_type password(const uri &uri_) {
 }
 
 inline
-uri::string_type decoded(const uri::path_type &path) {
+uri::string_type decoded(const uri::path_range &path) {
 	uri::string_type decoded;
 	decode(path, std::back_inserter(decoded));
 	return std::move(decoded);
 }
 
 inline
-uri::string_type decoded(const uri::query_type &query) {
+uri::string_type decoded(const uri::query_range &query) {
 	uri::string_type decoded;
 	decode(query, std::back_inserter(decoded));
 	return std::move(decoded);
 }
 
 inline
-uri::string_type decoded(const uri::fragment_type &fragment) {
+uri::string_type decoded(const uri::fragment_range &fragment) {
 	uri::string_type decoded;
 	decode(fragment, std::back_inserter(decoded));
 	return std::move(decoded);

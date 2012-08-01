@@ -24,38 +24,38 @@ bool operator == (const uri &lhs, const uri &rhs) {
 	}
 
 	// the scheme can be compared insensitive to case
-	bool equal = boost::iequals(lhs.scheme_range(), rhs.scheme_range());
+	bool equal = boost::iequals(lhs.scheme(), rhs.scheme());
 	if (equal) {
 		// the user info must be case sensitive
-		equal = boost::equals(lhs.user_info_range(), rhs.user_info_range());
+		equal = boost::equals(lhs.user_info(), rhs.user_info());
 	}
 
 	if (equal)	{
 		// the host can be compared insensitive to case
-		equal = boost::iequals(lhs.host_range(), rhs.host_range());
+		equal = boost::iequals(lhs.host(), rhs.host());
 	}
 
 	if (equal) {
-		if (lhs.port_range() && rhs.port_range()) {
-			equal = boost::equals(lhs.port_range(), rhs.port_range());
+		if (lhs.port() && rhs.port()) {
+			equal = boost::equals(lhs.port(), rhs.port());
 		}
-		else if (!lhs.port_range() && rhs.port_range()) {
-			auto port = default_port(lhs.scheme());
+		else if (!lhs.port() && rhs.port()) {
+			auto port = default_port(scheme(lhs));
 			if (port) {
-				equal = boost::equals(*port, rhs.port_range());
+				equal = boost::equals(*port, rhs.port());
 			}
 		}
-		else if (lhs.port_range() && !rhs.port_range()) {
-			auto port = default_port(rhs.scheme());
+		else if (lhs.port() && !rhs.port()) {
+			auto port = default_port(scheme(rhs));
 			if (port) {
-				equal = boost::equals(lhs.port_range(), *port);
+				equal = boost::equals(lhs.port(), *port);
 			}
 		}
 	}
 
 	if (equal) {
 		// test normalized paths
-		equal = boost::iequals(normalize(lhs.path_range()), normalize(rhs.path_range()));
+		equal = boost::iequals(normalize(lhs.path()), normalize(rhs.path()));
 	}
 
 	if (equal) {

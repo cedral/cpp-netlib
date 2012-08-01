@@ -5,12 +5,12 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <network/uri/schemes.hpp>
-#include <boost/unordered_map.hpp>
+#include <unordered_map>
 
 namespace network {
 namespace {
-static boost::unordered_map<std::string, std::string> hierarchical_schemes_;
-static boost::unordered_map<std::string, std::string> opaque_schemes_;
+static std::unordered_map<std::string, std::string> hierarchical_schemes_;
+static std::unordered_map<std::string, std::string> opaque_schemes_;
 
 bool register_hierarchical_schemes() {
     hierarchical_schemes_.insert(std::make_pair(std::string("http"), std::string("80")));

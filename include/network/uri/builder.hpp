@@ -99,7 +99,7 @@ public:
     }
 
     builder &query(const string_type &key, const string_type &value) {
-        if (!uri_.query_range())
+        if (!uri_.query())
         {
             uri_.uri_.append("?");
         }

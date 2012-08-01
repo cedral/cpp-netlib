@@ -17,7 +17,7 @@
 # include <boost/range/algorithm/for_each.hpp>
 
 namespace network {
-uri::string_type normalize(const uri::scheme_type &scheme) {
+uri::string_type normalize(const uri::scheme_range &scheme) {
 	using namespace boost::algorithm;
 
 	uri::string_type normalized_scheme(std::begin(scheme), std::end(scheme));
@@ -25,11 +25,11 @@ uri::string_type normalize(const uri::scheme_type &scheme) {
 	return std::move(normalized_scheme);
 }
 
-uri::string_type normalize(const uri::user_info_type &user_info) {
+uri::string_type normalize(const uri::user_info_range &user_info) {
 	return uri::string_type(std::begin(user_info), std::end(user_info));
 }
 
-uri::string_type normalize(const uri::host_type &host) {
+uri::string_type normalize(const uri::host_range &host) {
 	using namespace boost::algorithm;
 
 	uri::string_type normalized_host(std::begin(host), std::end(host));
@@ -37,11 +37,11 @@ uri::string_type normalize(const uri::host_type &host) {
 	return std::move(normalized_host);
 }
 
-uri::string_type normalize(const uri::port_type &port) {
+uri::string_type normalize(const uri::port_range &port) {
 	return uri::string_type(std::begin(port), std::end(port));
 }
 
-uri::string_type normalize(const uri::path_type &path) {
+uri::string_type normalize(const uri::path_range &path) {
 	using namespace boost;
 	using namespace boost::algorithm;
 
@@ -79,24 +79,24 @@ uri::string_type normalize(const uri::path_type &path) {
 	return join(normalized_segments, "/");
 }
 
-uri::string_type normalize(const uri::query_type &query) {
+uri::string_type normalize(const uri::query_range &query) {
 	return uri::string_type(std::begin(query), std::end(query));
 }
 
-uri::string_type normalize(const uri::fragment_type &fragment) {
+uri::string_type normalize(const uri::fragment_range &fragment) {
 	return uri::string_type(std::begin(fragment), std::end(fragment));
 }
 
 uri normalize(const uri &uri_) {
 	uri normalized_uri;
 	builder(normalized_uri)
-		.scheme(scheme(uri_))
-		.user_info(user_info(uri_))
-		.host(host(uri_))
-		.port(port(uri_))
-		.path(path(uri_))
-		.query(query(uri_))
-		.fragment(fragment(uri_))
+		.scheme(normalize(uri_.scheme()))
+		.user_info(normalize(uri_.user_info()))
+		.host(normalize(uri_.host()))
+		.port(normalize(uri_.port()))
+		.path(normalize(uri_.path()))
+		.query(normalize(uri_.query()))
+		.fragment(normalize(uri_.fragment()))
 		;
 	return std::move(normalized_uri);
 }

@@ -40,13 +40,13 @@ public:
     typedef string_type::value_type value_type;
     typedef string_type::const_iterator const_iterator;
 
-	typedef detail::scheme_range<const_iterator> scheme_type;
-	typedef detail::user_info_range<const_iterator> user_info_type;
-	typedef detail::host_range<const_iterator> host_type;
-	typedef detail::port_range<const_iterator> port_type;
-	typedef detail::path_range<const_iterator> path_type;
-	typedef detail::query_range<const_iterator> query_type;
-	typedef detail::fragment_range<const_iterator> fragment_type;
+	typedef detail::scheme_range<const_iterator> scheme_range;
+	typedef detail::user_info_range<const_iterator> user_info_range;
+	typedef detail::host_range<const_iterator> host_range;
+	typedef detail::port_range<const_iterator> port_range;
+	typedef detail::path_range<const_iterator> path_range;
+	typedef detail::query_range<const_iterator> query_range;
+	typedef detail::fragment_range<const_iterator> fragment_range;
 
     uri()
         : is_valid_(false) {
@@ -61,7 +61,7 @@ public:
     template <
         class FwdIter
         >
-    uri(const FwdIter &first, const FwdIter &last)
+		uri(const FwdIter &first, const FwdIter &last)
         : uri_(first, last), is_valid_(false) {
         parse();
     }
@@ -101,74 +101,50 @@ public:
         return uri_.end();
     }
 
-    scheme_type scheme_range() const {
-        return scheme_type(uri_parts_.scheme);
+    scheme_range scheme() const {
+        return scheme_range(std::begin(uri_parts_.scheme), std::end(uri_parts_.scheme));
     }
 
-    user_info_type user_info_range() const {
+    user_info_range user_info() const {
         return uri_parts_.hier_part.user_info?
-            user_info_type(uri_parts_.hier_part.user_info.get())
-			: user_info_type();
+            user_info_range(std::begin(uri_parts_.hier_part.user_info.get()),
+							std::end(uri_parts_.hier_part.user_info.get()))
+			: user_info_range();
     }
 
-    host_type host_range() const {
+    host_range host() const {
         return uri_parts_.hier_part.host?
-            host_type(uri_parts_.hier_part.host.get()) : host_type();
+            host_range(std::begin(uri_parts_.hier_part.host.get()),
+					   std::end(uri_parts_.hier_part.host.get()))
+			: host_range();
     }
 
-    port_type port_range() const {
+    port_range port() const {
         return uri_parts_.hier_part.port?
-            port_type(uri_parts_.hier_part.port.get()) : port_type();
+            port_range(std::begin(uri_parts_.hier_part.port.get()),
+					   std::end(uri_parts_.hier_part.port.get()))
+			: port_range();
     }
 
-    path_type path_range() const {
+    path_range path() const {
         return uri_parts_.hier_part.path?
-            path_type(uri_parts_.hier_part.path.get()) : path_type();
+            path_range(std::begin(uri_parts_.hier_part.path.get()),
+					   std::end(uri_parts_.hier_part.path.get()))
+			: path_range();
     }
 
-    query_type query_range() const {
+    query_range query() const {
         return uri_parts_.query ?
-            query_type(uri_parts_.query.get()) : query_type();
+            query_range(std::begin(uri_parts_.query.get()),
+						std::end(uri_parts_.query.get()))
+			: query_range();
     }
 
-    fragment_type fragment_range() const {
+    fragment_range fragment() const {
         return uri_parts_.fragment?
-            fragment_type(uri_parts_.fragment.get()) : fragment_type();
-    }
-
-    string_type scheme() const {
-        auto range = scheme_range();
-        return range? string_type(std::begin(range), std::end(range)) : string_type();
-    }
-
-    string_type user_info() const {
-        auto range = user_info_range();
-        return range? string_type(std::begin(range), std::end(range)) : string_type();
-    }
-
-    string_type host() const {
-        auto range = host_range();
-        return range? string_type(std::begin(range), std::end(range)) : string_type();
-    }
-
-    string_type port() const {
-        auto range = port_range();
-        return range? string_type(std::begin(range), std::end(range)) : string_type();
-    }
-
-    string_type path() const {
-        auto range = path_range();
-        return range? string_type(std::begin(range), std::end(range)) : string_type();
-    }
-
-    string_type query() const {
-        auto range = query_range();
-        return range? string_type(std::begin(range), std::end(range)) : string_type();
-    }
-
-    string_type fragment() const {
-        auto range = fragment_range();
-        return range? string_type(std::begin(range), std::end(range)) : string_type();
+            fragment_range(std::begin(uri_parts_.fragment.get()),
+						   std::end(uri_parts_.fragment.get()))
+			: fragment_range();
     }
 
     string_type string() const {
@@ -187,7 +163,7 @@ public:
     template <
         class FwdIter
         >
-    void append(const FwdIter &first, const FwdIter &last) {
+		void append(const FwdIter &first, const FwdIter &last) {
         uri_.append(first, last);
         parse();
     }
@@ -208,8 +184,8 @@ void uri::parse() {
     is_valid_ = detail::parse(first, last, uri_parts_);
     if (is_valid_) {
         if (!uri_parts_.scheme) {
-            uri_parts_.scheme = scheme_type(std::begin(uri_),
-											std::begin(uri_));
+            uri_parts_.scheme = scheme_range(std::begin(uri_),
+											 std::begin(uri_));
         }
         uri_parts_.update();
     }
@@ -217,57 +193,64 @@ void uri::parse() {
 
 inline
 uri::string_type scheme(const uri &uri_) {
-    return uri_.scheme();
+	auto range = uri_.scheme();
+	return range? uri::string_type(std::begin(range), std::end(range)) : uri::string_type();
 }
 
 inline
 uri::string_type user_info(const uri &uri_) {
-    return uri_.user_info();
+	auto range = uri_.user_info();
+	return range? uri::string_type(std::begin(range), std::end(range)) : uri::string_type();
 }
 
 inline
 uri::string_type host(const uri &uri_) {
-    return uri_.host();
+	auto range = uri_.host();
+	return range? uri::string_type(std::begin(range), std::end(range)) : uri::string_type();
 }
 
 inline
 uri::string_type port(const uri &uri_) {
-    return uri_.port();
+	auto range = uri_.port();
+	return range? uri::string_type(std::begin(range), std::end(range)) : uri::string_type();
 }
 
 inline
 boost::optional<unsigned short> port_us(const uri &uri_) {
-    auto port = uri_.port();
-    return (port.empty())?
+    auto value = port(uri_);
+    return (value.empty())?
         boost::optional<unsigned short>() :
-        boost::optional<unsigned short>(boost::lexical_cast<unsigned short>(port));
+        boost::optional<unsigned short>(boost::lexical_cast<unsigned short>(value));
 }
 
 inline
 uri::string_type path(const uri &uri_) {
-    return uri_.path();
+	auto range = uri_.path();
+	return range? uri::string_type(std::begin(range), std::end(range)) : uri::string_type();
 }
 
 inline
 uri::string_type query(const uri &uri_) {
-    return uri_.query();
+	auto range = uri_.query();
+	return range? uri::string_type(std::begin(range), std::end(range)) : uri::string_type();
 }
 
 inline
 uri::string_type fragment(const uri &uri_) {
-    return uri_.fragment();
+	auto range = uri_.fragment();
+	return range? uri::string_type(std::begin(range), std::end(range)) : uri::string_type();
 }
 
 inline
 uri::string_type hierarchical_part(const uri &uri_) {
-    return uri::string_type(std::begin(uri_.user_info_range()),
-                            std::end(uri_.path_range()));
+    return uri::string_type(std::begin(uri_.user_info()),
+                            std::end(uri_.path()));
 }
 
 inline
 uri::string_type authority(const uri &uri_) {
-    return uri::string_type(std::begin(uri_.user_info_range()),
-                            std::end(uri_.port_range()));
+    return uri::string_type(std::begin(uri_.user_info()),
+                            std::end(uri_.port()));
 }
 
 inline
@@ -277,12 +260,12 @@ bool valid(const uri &uri_) {
 
 inline
 bool is_absolute(const uri &uri_) {
-    return uri_.is_valid() && !boost::empty(uri_.scheme_range());
+    return uri_.is_valid() && !boost::empty(uri_.scheme());
 }
 
 inline
 bool is_relative(const uri &uri_) {
-    return uri_.is_valid() && boost::empty(uri_.scheme_range());
+    return uri_.is_valid() && boost::empty(uri_.scheme());
 }
 
 inline

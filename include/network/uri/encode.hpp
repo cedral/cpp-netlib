@@ -156,7 +156,7 @@ template <
 inline
 OutputIterator encode(const SinglePassRange &range,
                       const OutputIterator &out) {
-    return encode(boost::begin(range), boost::end(range), out);
+    return encode(std::begin(range), std::end(range), out);
 }
 
 inline
