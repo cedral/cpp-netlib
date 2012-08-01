@@ -18,8 +18,7 @@ namespace detail {
 template <
     typename CharT
     >
-CharT letter_to_hex(CharT in)
-{
+CharT letter_to_hex(CharT in) {
     switch (in)
     {
     case '0':

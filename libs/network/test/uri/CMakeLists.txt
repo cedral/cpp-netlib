@@ -20,7 +20,6 @@ if (Boost_FOUND)
     TESTS
     uri_test
     uri_builder_test
-    uri_builder_stream_test
     uri_encoding_test
     relative_uri_test
     scheme_tests

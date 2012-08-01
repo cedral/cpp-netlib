@@ -422,7 +422,7 @@ BOOST_AUTO_TEST_CASE(encoded_uri_test) {
     BOOST_CHECK_EQUAL(network::scheme(instance), "http");
     BOOST_CHECK_EQUAL(network::host(instance), "www.example.com");
     BOOST_CHECK_EQUAL(network::path(instance), "/Path%20With%20%28Some%29%20Encoded%20Characters%21");
-    BOOST_CHECK_EQUAL(network::decoded_path(instance), "/Path With (Some) Encoded Characters!");
+    BOOST_CHECK_EQUAL(network::decoded(instance.path_range()), "/Path With (Some) Encoded Characters!");
 }
 
 BOOST_AUTO_TEST_CASE(copy_constructor_test) {

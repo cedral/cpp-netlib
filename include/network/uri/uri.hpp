@@ -8,8 +8,10 @@
 #ifndef NETWORK_URI_INC
 #define NETWORK_URI_INC
 
+
 #include <network/uri/config.hpp>
 #include <network/uri/detail/uri_parts.hpp>
+#include <network/uri/detail/ranges.hpp>
 #include <network/uri/schemes.hpp>
 #include <boost/utility/swap.hpp>
 #include <boost/range/algorithm/equal.hpp>
@@ -37,135 +39,14 @@ public:
     typedef std::string string_type;
     typedef string_type::value_type value_type;
     typedef string_type::const_iterator const_iterator;
-    typedef boost::iterator_range<const_iterator> const_range_type;
 
-	struct scheme_type
-		: boost::iterator_range<const_iterator> {
-
-		scheme_type() {
-
-		}
-
-		scheme_type(const_iterator first, const_iterator last)
-			: boost::iterator_range<const_iterator>(first, last) {
-
-		}
-
-		scheme_type(boost::iterator_range<const_iterator> range)
-			: boost::iterator_range<const_iterator>(range) {
-
-		}
-
-	};
-
-	struct user_info_type
-		: boost::iterator_range<const_iterator> {
-
-		user_info_type() {
-
-		}
-
-		user_info_type(const_iterator first, const_iterator last)
-			: boost::iterator_range<const_iterator>(first, last) {
-
-		}
-
-		user_info_type(boost::iterator_range<const_iterator> range)
-			: boost::iterator_range<const_iterator>(range) {
-
-		}
-
-	};
-
-	struct host_type
-		: boost::iterator_range<const_iterator> {
-
-		host_type() {
-
-		}
-
-		host_type(const_iterator first, const_iterator last)
-			: boost::iterator_range<const_iterator>(first, last) {
-
-		}
-
-		host_type(boost::iterator_range<const_iterator> range)
-			: boost::iterator_range<const_iterator>(range) {
-
-		}
-
-	};
-
-	struct port_type
-		: boost::iterator_range<const_iterator> {
-
-		port_type() {
-
-		}
-
-		port_type(const_iterator first, const_iterator last)
-			: boost::iterator_range<const_iterator>(first, last) {
-
-		}
-
-		port_type(boost::iterator_range<const_iterator> range)
-			: boost::iterator_range<const_iterator>(range) {
-
-		}
-
-	};
-
-	struct path_type
-		: boost::iterator_range<const_iterator> {
-
-		path_type() {
-
-		}
-
-		path_type(boost::iterator_range<const_iterator> range)
-			: boost::iterator_range<const_iterator>(range) {
-
-		}
-
-	};
-
-	struct query_type
-		: boost::iterator_range<const_iterator> {
-
-		query_type() {
-
-		}
-
-		query_type(const_iterator first, const_iterator last)
-			: boost::iterator_range<const_iterator>(first, last) {
-
-		}
-
-		query_type(boost::iterator_range<const_iterator> range)
-			: boost::iterator_range<const_iterator>(range) {
-
-		}
-
-	};
-
-	struct fragment_type
-		: boost::iterator_range<const_iterator> {
-
-		fragment_type() {
-
-		}
-
-		fragment_type(const_iterator first, const_iterator last)
-			: boost::iterator_range<const_iterator>(first, last) {
-
-		}
-
-		fragment_type(boost::iterator_range<const_iterator> range)
-			: boost::iterator_range<const_iterator>(range) {
-
-		}
-
-	};
+	typedef detail::scheme_range<const_iterator> scheme_type;
+	typedef detail::user_info_range<const_iterator> user_info_type;
+	typedef detail::host_range<const_iterator> host_type;
+	typedef detail::port_range<const_iterator> port_type;
+	typedef detail::path_range<const_iterator> path_type;
+	typedef detail::query_range<const_iterator> query_type;
+	typedef detail::fragment_range<const_iterator> fragment_type;
 
     uri()
         : is_valid_(false) {
@@ -207,9 +88,9 @@ public:
     }
 
     void swap(uri &other) {
-        boost::swap(uri_, other.uri_);
-        boost::swap(uri_parts_, other.uri_parts_);
-        boost::swap(is_valid_, other.is_valid_);
+        std::swap(uri_, other.uri_);
+        std::swap(uri_parts_, other.uri_parts_);
+        std::swap(is_valid_, other.is_valid_);
     }
 
     const_iterator begin() const {
@@ -257,37 +138,37 @@ public:
 
     string_type scheme() const {
         auto range = scheme_range();
-        return range? string_type(boost::begin(range), boost::end(range)) : string_type();
+        return range? string_type(std::begin(range), std::end(range)) : string_type();
     }
 
     string_type user_info() const {
         auto range = user_info_range();
-        return range? string_type(boost::begin(range), boost::end(range)) : string_type();
+        return range? string_type(std::begin(range), std::end(range)) : string_type();
     }
 
     string_type host() const {
         auto range = host_range();
-        return range? string_type(boost::begin(range), boost::end(range)) : string_type();
+        return range? string_type(std::begin(range), std::end(range)) : string_type();
     }
 
     string_type port() const {
         auto range = port_range();
-        return range? string_type(boost::begin(range), boost::end(range)) : string_type();
+        return range? string_type(std::begin(range), std::end(range)) : string_type();
     }
 
     string_type path() const {
         auto range = path_range();
-        return range? string_type(boost::begin(range), boost::end(range)) : string_type();
+        return range? string_type(std::begin(range), std::end(range)) : string_type();
     }
 
     string_type query() const {
         auto range = query_range();
-        return range? string_type(boost::begin(range), boost::end(range)) : string_type();
+        return range? string_type(std::begin(range), std::end(range)) : string_type();
     }
 
     string_type fragment() const {
         auto range = fragment_range();
-        return range? string_type(boost::begin(range), boost::end(range)) : string_type();
+        return range? string_type(std::begin(range), std::end(range)) : string_type();
     }
 
     string_type string() const {
@@ -323,12 +204,12 @@ private:
 
 inline
 void uri::parse() {
-    auto first(boost::begin(uri_)), last(boost::end(uri_));
+    auto first(std::begin(uri_)), last(std::end(uri_));
     is_valid_ = detail::parse(first, last, uri_parts_);
     if (is_valid_) {
         if (!uri_parts_.scheme) {
-            uri_parts_.scheme = scheme_type(boost::begin(uri_),
-											boost::begin(uri_));
+            uri_parts_.scheme = scheme_type(std::begin(uri_),
+											std::begin(uri_));
         }
         uri_parts_.update();
     }
@@ -379,14 +260,14 @@ uri::string_type fragment(const uri &uri_) {
 
 inline
 uri::string_type hierarchical_part(const uri &uri_) {
-    return uri::string_type(boost::begin(uri_.user_info_range()),
-                            boost::end(uri_.path_range()));
+    return uri::string_type(std::begin(uri_.user_info_range()),
+                            std::end(uri_.path_range()));
 }
 
 inline
 uri::string_type authority(const uri &uri_) {
-    return uri::string_type(boost::begin(uri_.user_info_range()),
-                            boost::end(uri_.port_range()));
+    return uri::string_type(std::begin(uri_.user_info_range()),
+                            std::end(uri_.port_range()));
 }
 
 inline
@@ -428,16 +309,11 @@ inline
 std::size_t hash_value(const uri &uri_)
 {
     std::size_t seed = 0;
-    for (auto it = boost::begin(uri_); it != boost::end(uri_); ++it) {
+    for (auto it = std::begin(uri_); it != std::end(uri_); ++it) {
         boost::hash_combine(seed, *it);
     }
     return seed;
 }
-
-//inline
-//bool operator == (const uri &lhs, const uri &rhs) {
-//    return boost::equal(lhs, rhs);
-//}
 
 bool operator == (const uri &lhs, const uri &rhs);
 
@@ -473,7 +349,6 @@ bool operator < (const uri &lhs, const uri &rhs) {
 } // namespace network
 
 #include <network/uri/accessors.hpp>
-#include <network/uri/directives.hpp>
 #include <network/uri/builder.hpp>
 
 

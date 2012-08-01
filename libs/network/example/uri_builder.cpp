@@ -13,9 +13,11 @@ int
 main(int argc, char *argv[]) {
 
     network::uri url;
-    url << network::scheme("http")
-        << network::host("www.github.com")
-        << network::path("/cpp-netlib");
+	network::builder(url)
+		.scheme("http")
+		.host("www.github.com")
+		.path("/cpp-netlib")
+		;
     std::cout << url << std::endl;
 
     return 0;
