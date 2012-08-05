@@ -9,12 +9,24 @@
 #define NETWORK_URI_URI_IO_INC
 
 #include <network/uri/uri.hpp>
+#include <iosfwd>
 
 namespace network {
-inline
-std::ostream &operator << (std::ostream &os, const uri &uri_) {
-    return os << uri_.string();
-}
+std::ostream &operator << (std::ostream &os, const uri &uri_);
+
+std::ostream &operator << (std::ostream &os, const uri::scheme_range &scheme);
+
+std::ostream &operator << (std::ostream &os, const uri::user_info_range &user_info);
+
+std::ostream &operator << (std::ostream &os, const uri::host_range &host);
+
+std::ostream &operator << (std::ostream &os, const uri::port_range &port);
+
+std::ostream &operator << (std::ostream &os, const uri::path_range &path);
+
+std::ostream &operator << (std::ostream &os, const uri::query_range &query);
+
+std::ostream &operator << (std::ostream &os, const uri::fragment_range &fragment);
 } // namespace network
 
 #endif // NETWORK_URI_URI_IO_INC

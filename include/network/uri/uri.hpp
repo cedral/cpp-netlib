@@ -16,6 +16,7 @@
 #include <boost/utility/swap.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/copy.hpp>
+#include <boost/range/algorithm/for_each.hpp>
 #include <boost/range/as_literal.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/lexical_cast.hpp>
@@ -61,7 +62,7 @@ public:
     template <
         class FwdIter
         >
-		uri(const FwdIter &first, const FwdIter &last)
+	uri(const FwdIter &first, const FwdIter &last)
         : uri_(first, last), is_valid_(false) {
         parse();
     }
@@ -70,6 +71,13 @@ public:
         : uri_(other.uri_) {
 		parse();
     }
+
+	uri(uri &&other)
+		: uri_(std::move(other.uri_))
+		, uri_parts_(std::move(other.uri_parts_))
+		, is_valid_(std::move(other.is_valid_)) {
+
+	}
 
     uri &operator = (const uri &other) {
 		uri_ = other.uri_;
@@ -153,19 +161,6 @@ public:
 
     bool is_valid() const {
         return is_valid_;
-    }
-
-    void append(const string_type &data) {
-        uri_.append(data);
-        parse();
-    }
-
-    template <
-        class FwdIter
-        >
-		void append(const FwdIter &first, const FwdIter &last) {
-        uri_.append(first, last);
-        parse();
     }
 
 private:
@@ -289,12 +284,10 @@ void swap(uri &lhs, uri &rhs) {
 }
 
 inline
-std::size_t hash_value(const uri &uri_)
-{
+std::size_t hash_value(const uri &uri_) {
     std::size_t seed = 0;
-    for (auto it = std::begin(uri_); it != std::end(uri_); ++it) {
-        boost::hash_combine(seed, *it);
-    }
+	boost::for_each(
+		uri_, [&seed] (uri::value_type c) { boost::hash_combine(seed, c); });
     return seed;
 }
 
