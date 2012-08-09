@@ -66,4 +66,22 @@ bool operator == (const uri &lhs, const uri &rhs) {
 
 	return equal;
 }
+
+namespace {
+std::locale uri_locale;  // initialized by uri::codecvt() below
+const std::codecvt<wchar_t, char, std::mbstate_t>* codecvt_facet_ptr;  // ditto
+} // namespace
+
+std::locale uri::imbue(const std::locale &loc) {
+    std::locale temp(uri_locale);
+    uri_locale = loc;
+    codecvt_facet_ptr =
+		&std::use_facet<std::codecvt<wchar_t, char, std::mbstate_t> >(uri_locale);
+    return temp;
+}
+
+const uri::codecvt_type &uri::codecvt() {
+	static std::locale posix_lazy_initialization(uri::imbue(std::locale("")));
+    return *codecvt_facet_ptr;
+}
 } // namespace network

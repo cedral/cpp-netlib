@@ -37,8 +37,9 @@ class uri {
 
 public:
 
-    typedef std::string string_type;
-    typedef string_type::value_type value_type;
+    typedef char value_type;
+    typedef std::basic_string<value_type> string_type;
+	typedef std::codecvt<wchar_t, char, std::mbstate_t> codecvt_type;
     typedef string_type::const_iterator const_iterator;
 
 	typedef detail::scheme_range<const_iterator> scheme_range;
@@ -155,13 +156,30 @@ public:
 			: fragment_range();
     }
 
-    string_type string() const {
+	const string_type &native() const {
+		return uri_;
+	}
+
+	const value_type *c_str() const {
+		return uri_.c_str();
+	}
+
+	std::string string(const codecvt_type &cvt = codecvt()) const {
         return uri_;
     }
+
+	std::wstring wstring(const codecvt_type &cvt = codecvt()) const {
+		return std::wstring(std::begin(uri_), std::end(uri_));
+	}
 
     bool is_valid() const {
         return is_valid_;
     }
+
+	// encoding conversion
+	static std::locale imbue(const std::locale& loc);
+
+	static const codecvt_type &codecvt();
 
 private:
 
@@ -326,7 +344,7 @@ bool operator < (const uri &lhs, const uri &rhs) {
 
 #include <network/uri/accessors.hpp>
 #include <network/uri/builder.hpp>
-
+#include <network/uri/normalize.hpp>
 
 namespace network {
 inline

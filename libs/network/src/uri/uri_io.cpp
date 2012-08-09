@@ -14,6 +14,9 @@ std::ostream &operator << (std::ostream &os, const uri &uri_) {
     return os << uri_.string();
 }
 
+std::wostream &operator << (std::wostream &os, const uri &uri_) {
+    return os << uri_.string();
+}
 
 std::ostream &operator << (std::ostream &os, const uri::scheme_range &scheme) {
 	boost::copy(scheme, std::ostream_iterator<uri::value_type>(os));
