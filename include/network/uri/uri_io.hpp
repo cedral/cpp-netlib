@@ -12,27 +12,27 @@
 #include <iosfwd>
 
 namespace network {
-std::ostream &operator << (std::ostream &os, const uri &uri_);
+  std::ostream &operator << (std::ostream &os, const uri &uri_);
 
-std::wostream &operator << (std::wostream &os, const uri &uri_);
+  std::wostream &operator << (std::wostream &os, const uri &uri_);
 
-std::ostream &operator << (std::ostream &os, const uri::scheme_range &scheme);
+  std::ostream &operator << (std::ostream &os, const uri::scheme_range &scheme);
 
-std::ostream &operator << (std::ostream &os, const uri::user_info_range &user_info);
+  std::ostream &operator << (std::ostream &os, const uri::user_info_range &user_info);
 
-std::ostream &operator << (std::ostream &os, const uri::host_range &host);
+  std::ostream &operator << (std::ostream &os, const uri::host_range &host);
 
-std::ostream &operator << (std::ostream &os, const uri::port_range &port);
+  std::ostream &operator << (std::ostream &os, const uri::port_range &port);
 
-std::ostream &operator << (std::ostream &os, const uri::path_range &path);
+  std::ostream &operator << (std::ostream &os, const uri::path_range &path);
 
-std::ostream &operator << (std::ostream &os, const uri::query_range &query);
+  std::ostream &operator << (std::ostream &os, const uri::query_range &query);
 
-std::ostream &operator << (std::ostream &os, const uri::fragment_range &fragment);
+  std::ostream &operator << (std::ostream &os, const uri::fragment_range &fragment);
 
-std::istream &operator >> (std::istream &is, uri &uri_);
+  std::istream &operator >> (std::istream &is, uri &uri_);
 
-std::wistream &operator >> (std::wistream &is, uri &uri_);
+  std::wistream &operator >> (std::wistream &is, uri &uri_);
 } // namespace network
 
 #endif // NETWORK_URI_URI_IO_INC

@@ -12,89 +12,88 @@
 #include <boost/optional.hpp>
 
 namespace network {
-namespace detail {
-template <
-    class FwdIter
-    >
-struct hierarchical_part {
+  namespace detail {
+    template <
+      class FwdIter
+      >
+    struct hierarchical_part {
 
-    boost::optional<boost::iterator_range<FwdIter> > user_info;
-    boost::optional<boost::iterator_range<FwdIter> > host;
-    boost::optional<boost::iterator_range<FwdIter> > port;
-    boost::optional<boost::iterator_range<FwdIter> > path;
+      boost::optional<boost::iterator_range<FwdIter> > user_info;
+      boost::optional<boost::iterator_range<FwdIter> > host;
+      boost::optional<boost::iterator_range<FwdIter> > port;
+      boost::optional<boost::iterator_range<FwdIter> > path;
 
-    FwdIter begin() const {
+      FwdIter begin() const {
         return std::begin(user_info);
-    }
+      }
 
-    FwdIter end() const {
+      FwdIter end() const {
         return std::end(path);
-    }
+      }
 
-    void update() {
+      void update() {
         if (!user_info) {
-            if (host) {
-                user_info = boost::iterator_range<FwdIter>(std::begin(host.get()),
-                                                           std::begin(host.get()));
-            }
-            else if (path) {
-                user_info = boost::iterator_range<FwdIter>(std::begin(path.get()),
-                                                           std::begin(path.get()));
-            }
+          if (host) {
+            user_info = boost::iterator_range<FwdIter>(std::begin(host.get()),
+                                                       std::begin(host.get()));
+          }
+          else if (path) {
+            user_info = boost::iterator_range<FwdIter>(std::begin(path.get()),
+                                                       std::begin(path.get()));
+          }
         }
 
         if (!host) {
-            host = boost::iterator_range<FwdIter>(std::begin(path.get()),
-                                                  std::begin(path.get()));
+          host = boost::iterator_range<FwdIter>(std::begin(path.get()),
+                                                std::begin(path.get()));
         }
 
         if (!port) {
-            port = boost::iterator_range<FwdIter>(std::end(host.get()),
-                                                  std::end(host.get()));
+          port = boost::iterator_range<FwdIter>(std::end(host.get()),
+                                                std::end(host.get()));
         }
 
         if (!path) {
-            path = boost::iterator_range<FwdIter>(std::end(port.get()),
-												  std::end(port.get()));
+          path = boost::iterator_range<FwdIter>(std::end(port.get()),
+                                                std::end(port.get()));
         }
-    }
+      }
 
-};
+    };
 
-template <
-    class FwdIter
-    >
-struct uri_parts {
+    template <
+      class FwdIter
+      >
+    struct uri_parts {
 
-	boost::iterator_range<FwdIter> scheme;
-    hierarchical_part<FwdIter> hier_part;
-    boost::optional<boost::iterator_range<FwdIter> > query;
-    boost::optional<boost::iterator_range<FwdIter> > fragment;
+      boost::iterator_range<FwdIter> scheme;
+      hierarchical_part<FwdIter> hier_part;
+      boost::optional<boost::iterator_range<FwdIter> > query;
+      boost::optional<boost::iterator_range<FwdIter> > fragment;
 
-    FwdIter begin() const {
+      FwdIter begin() const {
         return std::begin(scheme);
-    }
+      }
 
-    FwdIter end() const {
+      FwdIter end() const {
         return std::end(fragment);
-    }
+      }
 
-    void update() {
-
+      void update() {
         hier_part.update();
 
         if (!query) {
-            query = boost::iterator_range<FwdIter>(std::end(hier_part.path.get()),
-                                                   std::end(hier_part.path.get()));
+          query = boost::iterator_range<FwdIter>(std::end(hier_part.path.get()),
+                                                 std::end(hier_part.path.get()));
         }
 
         if (!fragment) {
-            fragment = boost::iterator_range<FwdIter>(std::end(query.get()),
-                                                      std::end(query.get()));
+          fragment = boost::iterator_range<FwdIter>(std::end(query.get()),
+                                                    std::end(query.get()));
         }
-    }
-};
-} // namespace detail
+      }
+    };
+  } // namespace detail
 } // namespace network
 
 

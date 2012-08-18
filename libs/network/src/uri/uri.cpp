@@ -12,76 +12,76 @@
 #include <map>
 
 namespace network {
-bool operator == (const uri &lhs, const uri &rhs) {
+  bool operator == (const uri &lhs, const uri &rhs) {
 
-	// if both URIs are empty, then we should define them as equal even though they're still invalid.
-	if (boost::empty(lhs) && boost::empty(rhs)) {
-		return true;
-	}
+    // if both URIs are empty, then we should define them as equal even though they're still invalid.
+    if (boost::empty(lhs) && boost::empty(rhs)) {
+      return true;
+    }
 
-	if (!valid(lhs) || !valid(rhs)) {
-		return false;
-	}
+    if (!valid(lhs) || !valid(rhs)) {
+      return false;
+    }
 
-	// the scheme can be compared insensitive to case
-	bool equal = boost::iequals(lhs.scheme(), rhs.scheme());
-	if (equal) {
-		// the user info must be case sensitive
-		equal = boost::equals(lhs.user_info(), rhs.user_info());
-	}
+    // the scheme can be compared insensitive to case
+    bool equal = boost::iequals(lhs.scheme(), rhs.scheme());
+    if (equal) {
+      // the user info must be case sensitive
+      equal = boost::equals(lhs.user_info(), rhs.user_info());
+    }
 
-	if (equal)	{
-		// the host can be compared insensitive to case
-		equal = boost::iequals(lhs.host(), rhs.host());
-	}
+    if (equal) {
+      // the host can be compared insensitive to case
+      equal = boost::iequals(lhs.host(), rhs.host());
+    }
 
-	if (equal) {
-		if (lhs.port() && rhs.port()) {
-			equal = boost::equals(lhs.port(), rhs.port());
-		}
-		else if (!lhs.port() && rhs.port()) {
-			auto port = default_port(scheme(lhs));
-			if (port) {
-				equal = boost::equals(*port, rhs.port());
-			}
-		}
-		else if (lhs.port() && !rhs.port()) {
-			auto port = default_port(scheme(rhs));
-			if (port) {
-				equal = boost::equals(lhs.port(), *port);
-			}
-		}
-	}
+    if (equal) {
+      if (lhs.port() && rhs.port()) {
+        equal = boost::equals(lhs.port(), rhs.port());
+      }
+      else if (!lhs.port() && rhs.port()) {
+        auto port = default_port(scheme(lhs));
+        if (port) {
+          equal = boost::equals(*port, rhs.port());
+        }
+      }
+      else if (lhs.port() && !rhs.port()) {
+        auto port = default_port(scheme(rhs));
+        if (port) {
+          equal = boost::equals(lhs.port(), *port);
+        }
+      }
+    }
 
-	if (equal) {
-		// test normalized paths
-		equal = boost::iequals(normalize(lhs.path()), normalize(rhs.path()));
-	}
+    if (equal) {
+      // test normalized paths
+      equal = boost::iequals(normalize(lhs.path()), normalize(rhs.path()));
+    }
 
-	if (equal) {
-		// test query, independent of order
-		std::map<uri::string_type, uri::string_type> lhs_query_params, rhs_query_params;
-		equal = (query_map(lhs, lhs_query_params) == query_map(rhs, rhs_query_params));
-	}
+    if (equal) {
+      // test query, independent of order
+      std::map<uri::string_type, uri::string_type> lhs_query_params, rhs_query_params;
+      equal = (query_map(lhs, lhs_query_params) == query_map(rhs, rhs_query_params));
+    }
 
-	return equal;
-}
+    return equal;
+  }
 
-namespace {
-std::locale uri_locale;  // initialized by uri::codecvt() below
-const std::codecvt<wchar_t, char, std::mbstate_t>* codecvt_facet_ptr;  // ditto
-} // namespace
+  namespace {
+    std::locale uri_locale;  // initialized by uri::codecvt() below
+    const std::codecvt<wchar_t, char, std::mbstate_t>* codecvt_facet_ptr;  // ditto
+  } // namespace
 
-std::locale uri::imbue(const std::locale &loc) {
+  std::locale uri::imbue(const std::locale &loc) {
     std::locale temp(uri_locale);
     uri_locale = loc;
     codecvt_facet_ptr =
-		&std::use_facet<std::codecvt<wchar_t, char, std::mbstate_t> >(uri_locale);
+      &std::use_facet<std::codecvt<wchar_t, char, std::mbstate_t> >(uri_locale);
     return temp;
-}
+  }
 
-const uri::codecvt_type &uri::codecvt() {
-	static std::locale posix_lazy_initialization(uri::imbue(std::locale("")));
+  const uri::codecvt_type &uri::codecvt() {
+    static std::locale posix_lazy_initialization(uri::imbue(std::locale("")));
     return *codecvt_facet_ptr;
-}
+  }
 } // namespace network
