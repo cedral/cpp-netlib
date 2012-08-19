@@ -18,7 +18,7 @@ namespace network {
 
       typedef FwdIter iterator;
       typedef FwdIter const_iterator;
-      typedef void (range_base<FwdIter>::*unspecified_bool_type)();
+      typedef bool (range_base<FwdIter>::*unspecified_bool_type)() const;
 
       range_base() {
 
@@ -45,8 +45,12 @@ namespace network {
 	return last_;
       }
 
+      bool empty() const {
+	return (first_ == last_);
+      }
+
       operator unspecified_bool_type () const {
-	return (first_ != last_)? &range_base<FwdIter>::internal : nullptr;
+	return !empty()? &range_base<FwdIter>::empty : nullptr;
       }
 
       //template <
@@ -63,8 +67,6 @@ namespace network {
       //std::u32string u32string() const;
 
     private:
-
-      void internal() {};
 
       FwdIter first_, last_;
 
@@ -135,6 +137,11 @@ namespace network {
         : range_base<FwdIter>(first, last) {
 
       }
+
+      //template <
+      //	typename IntType
+      //	>
+      //IntType as() const;
 
     };
 

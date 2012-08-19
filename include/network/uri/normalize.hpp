@@ -11,21 +11,21 @@
 #include <network/uri/uri.hpp>
 
 namespace network {
-uri::string_type normalize(const uri::scheme_range &scheme);
+  uri::string_type normalize(const uri::scheme_range &scheme);
 
-uri::string_type normalize(const uri::user_info_range &user_info);
+  uri::string_type normalize(const uri::user_info_range &user_info);
 
-uri::string_type normalize(const uri::host_range &host);
+  uri::string_type normalize(const uri::host_range &host);
 
-uri::string_type normalize(const uri::port_range &port);
+  uri::string_type normalize(const uri::port_range &port);
 
-uri::string_type normalize(const uri::path_range &path);
+  uri::string_type normalize(const uri::path_range &path);
 
-uri::string_type normalize(const uri::query_range &query);
+  uri::string_type normalize(const uri::query_range &query);
 
-uri::string_type normalize(const uri::fragment_range &fragment);
+  uri::string_type normalize(const uri::fragment_range &fragment);
 
-uri normalize(const uri &uri_);
+  uri normalize(const uri &uri_);
 } // namespace network
 
 #endif // NETWORK_URI_NORMALIZE_INC

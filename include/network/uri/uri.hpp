@@ -304,8 +304,8 @@ namespace network {
   inline
   std::size_t hash_value(const uri &uri_) {
     std::size_t seed = 0;
-    boost::for_each(
-                    uri_, [&seed] (uri::value_type c) { boost::hash_combine(seed, c); });
+    boost::for_each(uri_, [&seed] (uri::value_type c)
+		    { boost::hash_combine(seed, c); });
     return seed;
   }
 
