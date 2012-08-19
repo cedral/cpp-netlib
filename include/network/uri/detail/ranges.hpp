@@ -9,23 +9,22 @@
 
 # pragma once
 
-# include <boost/range/iterator_range.hpp>
-
 namespace network {
   namespace detail {
     template <
       typename FwdIter
       >
-    struct range_base<FwdIter> {
+    struct range_base {
 
       typedef FwdIter iterator;
       typedef FwdIter const_iterator;
+      typedef void (range_base<FwdIter>::*unspecified_bool_type)();
 
-      scheme_range() {
+      range_base() {
 
       }
 
-      scheme_range(FwdIter first, FwdIter last)
+      range_base(FwdIter first, FwdIter last)
         : first_(first), last_(last) {
 
       }
@@ -46,6 +45,10 @@ namespace network {
 	return last_;
       }
 
+      operator unspecified_bool_type () const {
+	return (first_ != last_)? &range_base<FwdIter>::internal : nullptr;
+      }
+
       //template <
       //	class String
       //	>
@@ -61,6 +64,8 @@ namespace network {
 
     private:
 
+      void internal() {};
+
       FwdIter first_, last_;
 
     };
@@ -69,14 +74,14 @@ namespace network {
       typename FwdIter
       >
     struct scheme_range
-      : boost::iterator_range<FwdIter> {
+      : range_base<FwdIter> {
 
       scheme_range() {
 
       }
 
       scheme_range(FwdIter first, FwdIter last)
-        : boost::iterator_range<FwdIter>(first, last) {
+        : range_base<FwdIter>(first, last) {
 
       }
 
@@ -86,14 +91,14 @@ namespace network {
       typename FwdIter
       >
     struct user_info_range
-      : boost::iterator_range<FwdIter> {
+      : range_base<FwdIter> {
 
       user_info_range() {
 
       }
 
       user_info_range(FwdIter first, FwdIter last)
-        : boost::iterator_range<FwdIter>(first, last) {
+        : range_base<FwdIter>(first, last) {
 
       }
 
@@ -103,14 +108,14 @@ namespace network {
       typename FwdIter
       >
     struct host_range
-      : boost::iterator_range<FwdIter> {
+      : range_base<FwdIter> {
 
       host_range() {
 
       }
 
       host_range(FwdIter first, FwdIter last)
-        : boost::iterator_range<FwdIter>(first, last) {
+        : range_base<FwdIter>(first, last) {
 
       }
 
@@ -120,14 +125,14 @@ namespace network {
       typename FwdIter
       >
     struct port_range
-      : boost::iterator_range<FwdIter> {
+      : range_base<FwdIter> {
 
       port_range() {
 
       }
 
       port_range(FwdIter first, FwdIter last)
-        : boost::iterator_range<FwdIter>(first, last) {
+        : range_base<FwdIter>(first, last) {
 
       }
 
@@ -137,14 +142,14 @@ namespace network {
       typename FwdIter
       >
     struct path_range
-      : boost::iterator_range<FwdIter> {
+      : range_base<FwdIter> {
 
       path_range() {
 
       }
 
       path_range(FwdIter first, FwdIter last)
-        : boost::iterator_range<FwdIter>(first, last) {
+        : range_base<FwdIter>(first, last) {
 
       }
 
@@ -154,14 +159,14 @@ namespace network {
       typename FwdIter
       >
     struct query_range
-      : boost::iterator_range<FwdIter> {
+      : range_base<FwdIter> {
 
       query_range() {
 
       }
 
       query_range(FwdIter first, FwdIter last)
-        : boost::iterator_range<FwdIter>(first, last) {
+        : range_base<FwdIter>(first, last) {
 
       }
 
@@ -171,14 +176,14 @@ namespace network {
       typename FwdIter
       >
     struct fragment_range
-      : boost::iterator_range<FwdIter> {
+      : range_base<FwdIter> {
 
       fragment_range() {
 
       }
 
       fragment_range(FwdIter first, FwdIter last)
-        : boost::iterator_range<FwdIter>(first, last) {
+        : range_base<FwdIter>(first, last) {
 
       }
 
