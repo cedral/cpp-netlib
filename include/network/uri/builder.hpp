@@ -14,8 +14,6 @@
 namespace network {
   class builder {
 
-    typedef uri::string_type string_type;
-
   public:
 
     builder(uri &uri_)
@@ -23,103 +21,173 @@ namespace network {
 
     }
 
-    builder &scheme(const string_type &scheme) {
-      uri_.uri_.append(scheme);
+    builder &scheme(const std::string &scheme) {
+      uri_.uri_.append(std::begin(scheme), std::end(scheme));
       if (opaque_schemes::exists(scheme)) {
-        uri_.uri_.append(":");
+        uri_.uri_.append(opaque_separator());
       }
       else {
-        uri_.uri_.append("://");
+        uri_.uri_.append(hierarchical_separator());
       }
       uri_.parse();
       return *this;
     }
 
-    builder &user_info(const string_type &user_info) {
-      uri_.uri_.append(user_info);
-      uri_.uri_.append("@");
+    builder &user_info(const std::string &user_info) {
+      uri_.uri_.append(std::begin(user_info), std::end(user_info));
+      uri_.uri_.append(user_info_separator());
       uri_.parse();
       return *this;
     }
 
-    builder &host(const string_type &host) {
-      uri_.uri_.append(host);
+    builder &host(const std::string &host) {
+      uri_.uri_.append(std::begin(host), std::end(host));
       uri_.parse();
       return *this;
     }
 
     builder &host(const boost::asio::ip::address &host) {
-      uri_.uri_.append(host.to_string());
-      uri_.parse();
+      this->host(host.to_string());
       return *this;
     }
 
     builder &host(const boost::asio::ip::address_v4 &host) {
-      uri_.uri_.append(host.to_string());
-      uri_.parse();
+      this->host(host.to_string());
       return *this;
     }
 
     builder &host(const boost::asio::ip::address_v6 &host) {
-      uri_.uri_.append("[");
-      uri_.uri_.append(host.to_string());
-      uri_.uri_.append("]");
-      uri_.parse();
+      //uri_.uri_.append("[");
+      //uri_.uri_.append(host.to_string());
+      //uri_.uri_.append("]");
+      //uri_.parse();
       return *this;
     }
 
-    builder &port(const string_type &port) {
-      uri_.uri_.append(":");
-      uri_.uri_.append(port);
+    builder &port(const std::string &port) {
+      uri_.uri_.append(port_separator());
+      uri_.uri_.append(std::begin(port), std::end(port));
       uri_.parse();
       return *this;
     }
 
     builder &port(uint16_t port) {
-      return this->port(boost::lexical_cast<string_type>(port));
+      return this->port(boost::lexical_cast<std::string>(port));
     }
 
-    builder &path(const string_type &path) {
-      uri_.uri_.append(path);
+    builder &path(const std::string &path) {
+      uri_.uri_.append(std::begin(path), std::end(path));
       uri_.parse();
       return *this;
     }
 
-    builder &encoded_path(const string_type &path) {
-      string_type encoded_path;
+    builder &encoded_path(const std::string &path) {
+      std::string encoded_path;
       encode(path, std::back_inserter(encoded_path));
       return this->path(encoded_path);
     }
 
-    builder &query(const string_type &query) {
-      uri_.uri_.append("?");
-      uri_.uri_.append(query);
+    builder &query(const std::string &query) {
+      uri_.uri_.append(query_begin_separator());
+      uri_.uri_.append(std::begin(query), std::end(query));
       uri_.parse();
       return *this;
     }
 
-    builder &query(const string_type &key, const string_type &value) {
+    builder &query(const std::string &key, const std::string &value) {
       if (!uri_.query()) {
-	uri_.uri_.append("?");
+      	uri_.uri_.append(query_begin_separator());
       }
       else {
-	uri_.uri_.append("&");
+      	uri_.uri_.append(query_separator());
       }
-      uri_.uri_.append(key);
-      uri_.uri_.append("=");
-      uri_.uri_.append(value);
+      uri_.uri_.append(std::begin(key), std::end(key));
+      uri_.uri_.append(query_value_separator());
+      uri_.uri_.append(std::begin(value), std::end(value));
       uri_.parse();
       return *this;
     }
 
-    builder &fragment(const string_type &fragment) {
-      uri_.uri_.append("#");
-      uri_.uri_.append(fragment);
+    builder &fragment(const std::string &fragment) {
+      uri_.uri_.append(fragment_separator());
+      uri_.uri_.append(std::begin(fragment), std::end(fragment));
       uri_.parse();
       return *this;
     }
 
   private:
+
+    static const uri::string_type &opaque_separator() {
+# if defined(BOOST_WINDOWS)
+      static uri::string_type v = L":";
+# else
+      static uri::string_type v = ":";
+# endif // defined(BOOST_WINDOWS)
+      return v;
+    }
+
+    static const uri::string_type &hierarchical_separator() {
+# if defined(BOOST_WINDOWS)
+      static uri::string_type v = L"://";
+# else
+      static uri::string_type v = "://";
+# endif // defined(BOOST_WINDOWS)
+      return v;
+    }
+
+    static const uri::string_type &user_info_separator() {
+# if defined(BOOST_WINDOWS)
+      static uri::string_type v = L"@";
+# else
+      static uri::string_type v = "@";
+# endif // defined(BOOST_WINDOWS)
+      return v;
+    }
+
+    static const uri::string_type &port_separator() {
+# if defined(BOOST_WINDOWS)
+      static uri::string_type v = L":";
+# else
+      static uri::string_type v = ":";
+# endif // defined(BOOST_WINDOWS)
+      return v;
+    }
+
+    static const uri::string_type &query_begin_separator() {
+# if defined(BOOST_WINDOWS)
+      static uri::string_type v = L"?";
+# else
+      static uri::string_type v = "?";
+# endif // defined(BOOST_WINDOWS)
+      return v;
+    }
+
+    static const uri::string_type &query_separator() {
+# if defined(BOOST_WINDOWS)
+      static uri::string_type v = L"&";
+# else
+      static uri::string_type v = "&";
+# endif // defined(BOOST_WINDOWS)
+      return v;
+    }
+
+    static const uri::string_type &query_value_separator() {
+# if defined(BOOST_WINDOWS)
+      static uri::string_type v = L"=";
+# else
+      static uri::string_type v = "=";
+# endif // defined(BOOST_WINDOWS)
+      return v;
+    }
+
+    static const uri::string_type &fragment_separator() {
+# if defined(BOOST_WINDOWS)
+      static uri::string_type v = L"#";
+# else
+      static uri::string_type v = "#";
+# endif // defined(BOOST_WINDOWS)
+      return v;
+    }
 
     uri &uri_;
 

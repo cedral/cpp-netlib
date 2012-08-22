@@ -90,9 +90,12 @@ namespace network {
     return decode(boost::begin(range), boost::end(range), out);
   }
 
+  template <
+    class String
+    >
   inline
-  std::string decoded(const std::string &input) {
-    std::string decoded;
+  String decoded(const String &input) {
+    String decoded;
     decode(input, std::back_inserter(decoded));
     return std::move(decoded);
   }

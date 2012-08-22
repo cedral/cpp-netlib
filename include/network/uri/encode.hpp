@@ -159,9 +159,12 @@ namespace network {
     return encode(std::begin(range), std::end(range), out);
   }
 
+  template <
+    class String
+    >
   inline
-  std::string encoded(const std::string &input) {
-    std::string encoded;
+  String encoded(const String &input) {
+    String encoded;
     encode(input, std::back_inserter(encoded));
     return std::move(encoded);
   }

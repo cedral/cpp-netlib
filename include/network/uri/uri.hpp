@@ -13,6 +13,7 @@
 #include <network/uri/detail/uri_parts.hpp>
 #include <network/uri/detail/ranges.hpp>
 #include <network/uri/schemes.hpp>
+#include <boost/config.hpp>
 #include <boost/utility/swap.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/copy.hpp>
@@ -28,6 +29,10 @@ namespace network {
     bool parse(std::string::const_iterator first,
                std::string::const_iterator last,
                uri_parts<std::string::const_iterator> &parts);
+
+    bool parse(std::wstring::const_iterator first,
+               std::wstring::const_iterator last,
+               uri_parts<std::wstring::const_iterator> &parts);
   } // namespace detail
 
 
@@ -37,7 +42,12 @@ namespace network {
 
   public:
 
+# if defined(BOOST_WINDOWS)
+    typedef wchar_t value_type;
+# else
     typedef char value_type;
+# endif // defined(BOOST_WINDOWS)
+
     typedef std::basic_string<value_type> string_type;
     typedef std::codecvt<wchar_t, char, std::mbstate_t> codecvt_type;
     typedef string_type::const_iterator const_iterator;
@@ -53,6 +63,11 @@ namespace network {
     uri()
       : is_valid_(false) {
 
+    }
+
+    uri(const std::string &uri)
+      : uri_(std::begin(uri), std::end(uri)), is_valid_(false) {
+      parse();
     }
 
     uri(const string_type &uri)
@@ -73,12 +88,12 @@ namespace network {
       parse();
     }
 
-    uri(uri &&other)
-      : uri_(std::move(other.uri_))
-      , uri_parts_(std::move(other.uri_parts_))
-      , is_valid_(std::move(other.is_valid_)) {
-
-    }
+    //uri(uri &&other)
+    //  : uri_(std::move(other.uri_))
+    //  , uri_parts_(std::move(other.uri_parts_))
+    //  , is_valid_(std::move(other.is_valid_)) {
+    //
+    //}
 
     uri &operator = (const uri &other) {
       uri_ = other.uri_;
@@ -88,6 +103,13 @@ namespace network {
 
     uri &operator = (const string_type &uri_string) {
       uri_ = uri_string;
+      parse();
+      return *this;
+    }
+
+    uri &operator = (const std::string &uri_string) {
+      //uri_ = uri_string;
+      uri_.assign(std::begin(uri_string), std::end(uri_string));
       parse();
       return *this;
     }
@@ -165,7 +187,7 @@ namespace network {
     }
 
     std::string string(const codecvt_type &cvt = codecvt()) const {
-      return uri_;
+      return std::string(std::begin(uri_), std::end(uri_));
     }
 
     std::wstring wstring(const codecvt_type &cvt = codecvt()) const {
@@ -205,27 +227,27 @@ namespace network {
   }
 
   inline
-  uri::string_type scheme(const uri &uri_) {
+  std::string scheme(const uri &uri_) {
     auto range = uri_.scheme();
-    return range? uri::string_type(std::begin(range), std::end(range)) : uri::string_type();
+    return range? std::string(std::begin(range), std::end(range)) : std::string();
   }
 
   inline
-  uri::string_type user_info(const uri &uri_) {
+  std::string user_info(const uri &uri_) {
     auto range = uri_.user_info();
-    return range? uri::string_type(std::begin(range), std::end(range)) : uri::string_type();
+    return range? std::string(std::begin(range), std::end(range)) : std::string();
   }
 
   inline
-  uri::string_type host(const uri &uri_) {
+  std::string host(const uri &uri_) {
     auto range = uri_.host();
-    return range? uri::string_type(std::begin(range), std::end(range)) : uri::string_type();
+    return range? std::string(std::begin(range), std::end(range)) : std::string();
   }
 
   inline
-  uri::string_type port(const uri &uri_) {
+  std::string port(const uri &uri_) {
     auto range = uri_.port();
-    return range? uri::string_type(std::begin(range), std::end(range)) : uri::string_type();
+    return range? std::string(std::begin(range), std::end(range)) : std::string();
   }
 
   inline
@@ -237,32 +259,32 @@ namespace network {
   }
 
   inline
-  uri::string_type path(const uri &uri_) {
+  std::string path(const uri &uri_) {
     auto range = uri_.path();
-    return range? uri::string_type(std::begin(range), std::end(range)) : uri::string_type();
+    return range? std::string(std::begin(range), std::end(range)) : std::string();
   }
 
   inline
-  uri::string_type query(const uri &uri_) {
+  std::string query(const uri &uri_) {
     auto range = uri_.query();
-    return range? uri::string_type(std::begin(range), std::end(range)) : uri::string_type();
+    return range? std::string(std::begin(range), std::end(range)) : std::string();
   }
 
   inline
-  uri::string_type fragment(const uri &uri_) {
+  std::string fragment(const uri &uri_) {
     auto range = uri_.fragment();
-    return range? uri::string_type(std::begin(range), std::end(range)) : uri::string_type();
+    return range? std::string(std::begin(range), std::end(range)) : std::string();
   }
 
   inline
-  uri::string_type hierarchical_part(const uri &uri_) {
-    return uri::string_type(std::begin(uri_.user_info()),
+  std::string hierarchical_part(const uri &uri_) {
+    return std::string(std::begin(uri_.user_info()),
                             std::end(uri_.path()));
   }
 
   inline
-  uri::string_type authority(const uri &uri_) {
-    return uri::string_type(std::begin(uri_.user_info()),
+  std::string authority(const uri &uri_) {
+    return std::string(std::begin(uri_.user_info()),
                             std::end(uri_.port()));
   }
 
@@ -312,12 +334,12 @@ namespace network {
   bool operator == (const uri &lhs, const uri &rhs);
 
   inline
-  bool operator == (const uri &lhs, const uri::string_type &rhs) {
+  bool operator == (const uri &lhs, const std::string &rhs) {
     return lhs == uri(rhs);
   }
 
   inline
-  bool operator == (const uri::string_type &lhs, const uri &rhs) {
+  bool operator == (const std::string &lhs, const uri &rhs) {
     return uri(lhs) == rhs;
   }
 
@@ -349,9 +371,9 @@ namespace network {
 namespace network {
   inline
   uri from_parts(const uri &base_uri,
-                 const uri::string_type &path_,
-                 const uri::string_type &query_,
-                 const uri::string_type &fragment_) {
+                 const std::string &path_,
+                 const std::string &query_,
+                 const std::string &fragment_) {
     uri uri_(base_uri);
     builder(uri_).path(path_).query(query_).fragment(fragment_);
     return uri_;
@@ -359,8 +381,8 @@ namespace network {
 
   inline
   uri from_parts(const uri &base_uri,
-                 const uri::string_type &path_,
-                 const uri::string_type &query_) {
+                 const std::string &path_,
+                 const std::string &query_) {
     uri uri_(base_uri);
     builder(uri_).path(path_).query(query_);
     return uri_;
@@ -368,30 +390,30 @@ namespace network {
 
   inline
   uri from_parts(const uri &base_uri,
-                 const uri::string_type &path_) {
+                 const std::string &path_) {
     uri uri_(base_uri);
     builder(uri_).path(path_);
     return uri_;
   }
 
   inline
-  uri from_parts(const uri::string_type &base_uri,
-                 const uri::string_type &path,
-                 const uri::string_type &query,
-                 const uri::string_type &fragment) {
+  uri from_parts(const std::string &base_uri,
+                 const std::string &path,
+                 const std::string &query,
+                 const std::string &fragment) {
     return from_parts(uri(base_uri), path, query, fragment);
   }
 
   inline
-  uri from_parts(const uri::string_type &base_uri,
-                 const uri::string_type &path,
-                 const uri::string_type &query) {
+  uri from_parts(const std::string &base_uri,
+                 const std::string &path,
+                 const std::string &query) {
     return from_parts(uri(base_uri), path, query);
   }
 
   inline
-  uri from_parts(const uri::string_type &base_uri,
-                 const uri::string_type &path) {
+  uri from_parts(const std::string &base_uri,
+                 const std::string &path) {
     return from_parts(uri(base_uri), path);
   }
 } // namespace network

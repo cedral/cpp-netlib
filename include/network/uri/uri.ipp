@@ -256,5 +256,14 @@ namespace network {
       bool is_valid = qi::parse(first, last, grammar, parts);
       return is_valid && (first == last);
     }
+
+    bool parse(std::wstring::const_iterator first,
+               std::wstring::const_iterator last,
+               uri_parts<std::wstring::const_iterator> &parts) {
+      namespace qi = boost::spirit::qi;
+      static detail::uri_grammar<std::wstring> grammar;
+      bool is_valid = qi::parse(first, last, grammar, parts);
+      return is_valid && (first == last);
+    }
   } // namespace detail
 } // namespace network

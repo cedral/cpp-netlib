@@ -47,7 +47,11 @@ namespace network {
 
     // add trailing /
     if (empty(path)) {
+# if defined(BOOST_WINDOWS)
+      return uri::string_type(L"/");
+# else
       return uri::string_type("/");
+# endif // defined(BOOST_WINDOWS)
     }
 
     std::vector<uri::string_type> path_segments;
@@ -59,7 +63,7 @@ namespace network {
       });
 
     // remove double dot segments
-    std::vector<std::string> normalized_segments;
+    std::vector<uri::string_type> normalized_segments;
     auto depth = 0;
     for_each(path_segments, [&normalized_segments, &depth] (const uri::string_type &s) {
         assert(depth >= 0);

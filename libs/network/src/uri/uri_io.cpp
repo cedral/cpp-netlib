@@ -15,7 +15,7 @@ namespace network {
   }
 
   std::wostream &operator << (std::wostream &os, const uri &uri_) {
-    return os << uri_.string();
+    return os << uri_.wstring();
   }
 
   std::ostream &operator << (std::ostream &os, const uri::scheme_range &scheme) {
