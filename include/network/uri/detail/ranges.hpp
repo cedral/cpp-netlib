@@ -30,27 +30,27 @@ namespace network {
       }
 
       iterator begin() {
-	return first_;
+        return first_;
       }
 
       const_iterator begin() const {
-	return first_;
+        return first_;
       }
 
       iterator end() {
-	return last_;
+        return last_;
       }
 
       const_iterator end() const {
-	return last_;
+        return last_;
       }
 
       bool empty() const {
-	return (first_ == last_);
+        return (first_ == last_);
       }
 
       operator unspecified_bool_type () const {
-	return !empty()? &range_base<FwdIter>::empty : nullptr;
+        return !empty()? &range_base<FwdIter>::empty : nullptr;
       }
 
       //template <
@@ -137,11 +137,6 @@ namespace network {
         : range_base<FwdIter>(first, last) {
 
       }
-
-      //template <
-      //	typename IntType
-      //	>
-      //IntType as() const;
 
     };
 

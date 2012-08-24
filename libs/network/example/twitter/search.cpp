@@ -30,9 +30,9 @@ int main(int argc, char *argv[]) {
 
         std::cout << "Searching Twitter for query: " << argv[1] << std::endl;
         network::uri search(base_uri);
-		network::builder(search)
-			.query("q", network::encoded(argv[1]))
-			;
+		//network::builder(search)
+		//	.query("q", network::encoded(argv[1]))
+		//	;
         http::client::request request(search);
         http::client::response response = client.get(request);
 

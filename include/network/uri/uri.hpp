@@ -65,22 +65,30 @@ namespace network {
 
     }
 
-    uri(const std::string &uri)
-      : uri_(std::begin(uri), std::end(uri)), is_valid_(false) {
+    explicit uri(const value_type *source)
+		: uri_(source)
+		, is_valid_(false) {
       parse();
     }
 
-    uri(const string_type &uri)
-      : uri_(uri), is_valid_(false) {
+    explicit uri(const string_type &source)
+		: uri_(source)
+		, is_valid_(false) {
       parse();
+    }
+
+     template <
+        class Source
+        >
+    uri(const Source &source) {
+      init(std::begin(source), std::end(source));
     }
 
     template <
       class FwdIter
       >
-      uri(const FwdIter &first, const FwdIter &last)
-      : uri_(first, last), is_valid_(false) {
-      parse();
+      uri(const FwdIter &first, const FwdIter &last) {
+      init(first, last);
     }
 
     uri(const uri &other)
@@ -101,14 +109,22 @@ namespace network {
       return *this;
     }
 
-    uri &operator = (const string_type &uri_string) {
+    uri &operator = (const value_type *uri_string) {
       uri_ = uri_string;
       parse();
       return *this;
     }
 
-    uri &operator = (const std::string &uri_string) {
-      //uri_ = uri_string;
+	uri &operator = (const string_type &uri_string) {
+      uri_ = uri_string;
+      parse();
+      return *this;
+	}
+
+	template <
+		class Source
+	>
+    uri &operator = (const Source &uri_string) {
       uri_.assign(std::begin(uri_string), std::end(uri_string));
       parse();
       return *this;
@@ -204,6 +220,16 @@ namespace network {
     static const codecvt_type &codecvt();
 
   private:
+
+    template <
+        class FwdIter
+        >
+    void init(FwdIter first, FwdIter last)
+	{
+      uri_.assign(first, last);
+      is_valid_ = false;
+      parse();
+	}
 
     void parse();
 
@@ -396,26 +422,26 @@ namespace network {
     return uri_;
   }
 
-  inline
-  uri from_parts(const std::string &base_uri,
-                 const std::string &path,
-                 const std::string &query,
-                 const std::string &fragment) {
-    return from_parts(uri(base_uri), path, query, fragment);
-  }
+  //inline
+  //uri from_parts(const std::string &base_uri,
+  //               const std::string &path,
+  //               const std::string &query,
+  //               const std::string &fragment) {
+  //  return from_parts(uri(base_uri), path, query, fragment);
+  //}
 
-  inline
-  uri from_parts(const std::string &base_uri,
-                 const std::string &path,
-                 const std::string &query) {
-    return from_parts(uri(base_uri), path, query);
-  }
+  //inline
+  //uri from_parts(const std::string &base_uri,
+  //               const std::string &path,
+  //               const std::string &query) {
+  //  return from_parts(uri(base_uri), path, query);
+  //}
 
-  inline
-  uri from_parts(const std::string &base_uri,
-                 const std::string &path) {
-    return from_parts(uri(base_uri), path);
-  }
+  //inline
+  //uri from_parts(const std::string &base_uri,
+  //               const std::string &path) {
+  //  return from_parts(uri(base_uri), path);
+  //}
 } // namespace network
 
 #include <boost/filesystem/path.hpp>
