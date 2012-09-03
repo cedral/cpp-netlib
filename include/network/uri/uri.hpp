@@ -71,20 +71,30 @@ namespace network {
       parse();
     }
 
-    explicit uri(const string_type &source)
-		: uri_(source)
-		, is_valid_(false) {
-      parse();
-    }
+  //  explicit uri(const string_type &source)
+		//: uri_(source)
+		//, is_valid_(false) {
+  //    parse();
+  //  }
 
-     template <
-        class Source
-        >
-    uri(const Source &source) {
-      init(std::begin(source), std::end(source));
-    }
+    // template <
+    //    class Source
+    //    >
+    //uri(const Source &source) {
+    //  init(std::begin(source), std::end(source));
+    //}
 
-    template <
+	uri(const std::string &source)
+	{
+		init(std::begin(source), std::end(source));
+	}
+
+	uri(const std::wstring &source)
+	{
+		init(std::begin(source), std::end(source));
+	}
+
+	template <
       class FwdIter
       >
       uri(const FwdIter &first, const FwdIter &last) {
@@ -109,14 +119,22 @@ namespace network {
       return *this;
     }
 
-    uri &operator = (const value_type *uri_string) {
-      uri_ = uri_string;
-      parse();
-      return *this;
+	uri &operator = (const char *uri_string) {
+      return this->operator = (std::string(uri_string));
+	}
+
+    uri &operator = (const wchar_t *uri_string) {
+      return this->operator = (std::wstring(uri_string));
     }
 
-	uri &operator = (const string_type &uri_string) {
-      uri_ = uri_string;
+	uri &operator = (const std::string &uri_string) {
+      uri_.assign(std::begin(uri_string), std::end(uri_string));
+	  parse();
+	  return *this;
+	}
+
+	uri &operator = (const std::wstring &uri_string) {
+      uri_.assign(std::begin(uri_string), std::end(uri_string));
       parse();
       return *this;
 	}

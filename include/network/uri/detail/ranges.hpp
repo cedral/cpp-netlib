@@ -53,20 +53,7 @@ namespace network {
         return !empty()? &range_base<FwdIter>::empty : nullptr;
       }
 
-      //template <
-      //	class String
-      //	>
-      //String string() const;
-      //
-      //std::string string() const;
-      //
-      //std::wstring wstring() const;
-      //
-      //std::u16string u16string() const;
-      //
-      //std::u32string u32string() const;
-
-    private:
+	private:
 
       FwdIter first_, last_;
 

@@ -93,15 +93,15 @@ namespace network {
 
   uri normalize(const uri &uri_) {
     uri normalized_uri;
-    //builder(normalized_uri)
-    //  .scheme(normalize(uri_.scheme()))
-    //  .user_info(normalize(uri_.user_info()))
-    //  .host(normalize(uri_.host()))
-    //  .port(normalize(uri_.port()))
-    //  .path(normalize(uri_.path()))
-    //  .query(normalize(uri_.query()))
-    //  .fragment(normalize(uri_.fragment()))
-    //  ;
+    builder(normalized_uri)
+      .scheme(normalize(uri_.scheme()))
+      .user_info(normalize(uri_.user_info()))
+      .host(normalize(uri_.host()))
+      .port(normalize(uri_.port()))
+      .path(normalize(uri_.path()))
+      .query(normalize(uri_.query()))
+      .fragment(normalize(uri_.fragment()))
+      ;
     return std::move(normalized_uri);
   }
 } // namespace network

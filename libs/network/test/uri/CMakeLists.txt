@@ -23,7 +23,6 @@ if (Boost_FOUND)
     uri_encoding_test
     uri_equality_test
     uri_normalization_test
-    uri_stream_test
     relative_uri_test
     scheme_tests
     )

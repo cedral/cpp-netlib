@@ -65,11 +65,13 @@ BOOST_AUTO_TEST_CASE(basic_uri_value_semantics_test) {
   network::uri original;
   network::uri assigned;
   assigned = original;
-  BOOST_CHECK(original == assigned);
+  //BOOST_CHECK(original == assigned);
+  BOOST_CHECK_EQUAL(original, assigned);
   assigned = "http://www.example.com/";
   BOOST_CHECK(original != assigned);
   network::uri copy(assigned);
-  BOOST_CHECK(copy == assigned);
+  //BOOST_CHECK(copy == assigned);
+  BOOST_CHECK_EQUAL(copy, assigned);
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_range_scheme_test) {
@@ -534,30 +536,30 @@ BOOST_AUTO_TEST_CASE(issue_67_test) {
     BOOST_CHECK(network::is_valid(bar1));
 }
 
-BOOST_AUTO_TEST_CASE(from_parts_1) {
-    BOOST_CHECK_EQUAL(network::uri("http://www.example.com/path?query#fragment"),
-                      network::from_parts(network::uri("http://www.example.com"), "/path", "query", "fragment"));
-}
-
-BOOST_AUTO_TEST_CASE(from_parts_2) {
-    BOOST_CHECK_EQUAL(network::uri("http://www.example.com/path?query#fragment"),
-                      network::from_parts("http://www.example.com", "/path", "query", "fragment"));
-}
-
-BOOST_AUTO_TEST_CASE(from_parts_3) {
-    BOOST_CHECK_EQUAL(network::uri("http://www.example.com/path?query"),
-                      network::from_parts("http://www.example.com", "/path", "query"));
-}
-
-BOOST_AUTO_TEST_CASE(from_parts_4) {
-    BOOST_CHECK_EQUAL(network::uri("http://www.example.com/path"),
-                      network::from_parts("http://www.example.com", "/path"));
-}
-
-BOOST_AUTO_TEST_CASE(from_file) {
-    boost::filesystem::path path("/a/path/to/a/file.txt");
-    BOOST_CHECK_EQUAL(network::uri("file:///a/path/to/a/file.txt"), network::from_file(path));
-}
+//BOOST_AUTO_TEST_CASE(from_parts_1) {
+//    BOOST_CHECK_EQUAL(network::uri("http://www.example.com/path?query#fragment"),
+//                      network::from_parts(network::uri("http://www.example.com"), "/path", "query", "fragment"));
+//}
+//
+//BOOST_AUTO_TEST_CASE(from_parts_2) {
+//    BOOST_CHECK_EQUAL(network::uri("http://www.example.com/path?query#fragment"),
+//                      network::from_parts("http://www.example.com", "/path", "query", "fragment"));
+//}
+//
+//BOOST_AUTO_TEST_CASE(from_parts_3) {
+//    BOOST_CHECK_EQUAL(network::uri("http://www.example.com/path?query"),
+//                      network::from_parts("http://www.example.com", "/path", "query"));
+//}
+//
+//BOOST_AUTO_TEST_CASE(from_parts_4) {
+//    BOOST_CHECK_EQUAL(network::uri("http://www.example.com/path"),
+//                      network::from_parts("http://www.example.com", "/path"));
+//}
+//
+//BOOST_AUTO_TEST_CASE(from_file) {
+//    boost::filesystem::path path("/a/path/to/a/file.txt");
+//    BOOST_CHECK_EQUAL(network::uri("file:///a/path/to/a/file.txt"), network::from_file(path));
+//}
 
 BOOST_AUTO_TEST_CASE(issue_104_test) {
 	// https://github.com/cpp-netlib/cpp-netlib/issues/104
