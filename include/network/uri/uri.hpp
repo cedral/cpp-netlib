@@ -50,15 +50,16 @@ namespace network {
 
     typedef std::basic_string<value_type> string_type;
     typedef std::codecvt<wchar_t, char, std::mbstate_t> codecvt_type;
+    typedef string_type::const_iterator iterator;
     typedef string_type::const_iterator const_iterator;
 
-    typedef detail::scheme_range<const_iterator> scheme_range;
-    typedef detail::user_info_range<const_iterator> user_info_range;
-    typedef detail::host_range<const_iterator> host_range;
-    typedef detail::port_range<const_iterator> port_range;
-    typedef detail::path_range<const_iterator> path_range;
-    typedef detail::query_range<const_iterator> query_range;
-    typedef detail::fragment_range<const_iterator> fragment_range;
+    typedef detail::scheme_range scheme_range;
+    typedef detail::user_info_range user_info_range;
+    typedef detail::host_range host_range;
+    typedef detail::port_range port_range;
+    typedef detail::path_range path_range;
+    typedef detail::query_range query_range;
+    typedef detail::fragment_range fragment_range;
 
     uri()
       : is_valid_(false) {
@@ -66,16 +67,16 @@ namespace network {
     }
 
     explicit uri(const value_type *source)
-		: uri_(source)
-		, is_valid_(false) {
+      : uri_(source)
+      , is_valid_(false) {
       parse();
     }
 
-  //  explicit uri(const string_type &source)
-		//: uri_(source)
-		//, is_valid_(false) {
-  //    parse();
-  //  }
+    //  explicit uri(const string_type &source)
+    //: uri_(source)
+    //, is_valid_(false) {
+    //    parse();
+    //  }
 
     // template <
     //    class Source
@@ -84,20 +85,18 @@ namespace network {
     //  init(std::begin(source), std::end(source));
     //}
 
-	uri(const std::string &source)
-	{
-		init(std::begin(source), std::end(source));
-	}
+    uri(const std::string &source) {
+      init(std::begin(source), std::end(source));
+    }
 
-	uri(const std::wstring &source)
-	{
-		init(std::begin(source), std::end(source));
-	}
+    uri(const std::wstring &source) {
+      init(std::begin(source), std::end(source));
+    }
 
-	template <
+    template <
       class FwdIter
       >
-      uri(const FwdIter &first, const FwdIter &last) {
+    uri(const FwdIter &first, const FwdIter &last) {
       init(first, last);
     }
 
@@ -119,30 +118,30 @@ namespace network {
       return *this;
     }
 
-	uri &operator = (const char *uri_string) {
+    uri &operator = (const char *uri_string) {
       return this->operator = (std::string(uri_string));
-	}
+    }
 
     uri &operator = (const wchar_t *uri_string) {
       return this->operator = (std::wstring(uri_string));
     }
 
-	uri &operator = (const std::string &uri_string) {
-      uri_.assign(std::begin(uri_string), std::end(uri_string));
-	  parse();
-	  return *this;
-	}
-
-	uri &operator = (const std::wstring &uri_string) {
+    uri &operator = (const std::string &uri_string) {
       uri_.assign(std::begin(uri_string), std::end(uri_string));
       parse();
       return *this;
-	}
+    }
 
-	template <
-		class Source
-	>
-    uri &operator = (const Source &uri_string) {
+    uri &operator = (const std::wstring &uri_string) {
+      uri_.assign(std::begin(uri_string), std::end(uri_string));
+      parse();
+      return *this;
+    }
+
+    template <
+      class Source
+      >
+      uri &operator = (const Source &uri_string) {
       uri_.assign(std::begin(uri_string), std::end(uri_string));
       parse();
       return *this;

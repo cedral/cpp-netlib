@@ -11,20 +11,26 @@
 
 namespace network {
   namespace detail {
-    template <
-      typename FwdIter
-      >
+
     struct range_base {
 
-      typedef FwdIter iterator;
-      typedef FwdIter const_iterator;
-      typedef bool (range_base<FwdIter>::*unspecified_bool_type)() const;
+# if defined(BOOST_WINDOWS)
+      typedef wchar_t value_type;
+# else
+      typedef char value_type;
+# endif // defined(BOOST_WINDOWS)
+
+      typedef std::basic_string<value_type> string_type;
+      typedef string_type::const_iterator iterator;
+      typedef string_type::const_iterator const_iterator;
+
+      typedef bool (range_base::*unspecified_bool_type)() const;
 
       range_base() {
 
       }
 
-      range_base(FwdIter first, FwdIter last)
+      range_base(const_iterator first, const_iterator last)
         : first_(first), last_(last) {
 
       }
@@ -50,129 +56,101 @@ namespace network {
       }
 
       operator unspecified_bool_type () const {
-        return !empty()? &range_base<FwdIter>::empty : nullptr;
+        return !empty()? &range_base::empty : nullptr;
       }
 
-	private:
+    private:
 
-      FwdIter first_, last_;
+      const_iterator first_, last_;
 
     };
 
-    template <
-      typename FwdIter
-      >
-    struct scheme_range
-      : range_base<FwdIter> {
+    struct scheme_range : range_base {
 
       scheme_range() {
 
       }
 
-      scheme_range(FwdIter first, FwdIter last)
-        : range_base<FwdIter>(first, last) {
+      scheme_range(const_iterator first, const_iterator last)
+        : range_base(first, last) {
 
       }
 
     };
 
-    template <
-      typename FwdIter
-      >
-    struct user_info_range
-      : range_base<FwdIter> {
+    struct user_info_range : range_base {
 
       user_info_range() {
 
       }
 
-      user_info_range(FwdIter first, FwdIter last)
-        : range_base<FwdIter>(first, last) {
+      user_info_range(const_iterator first, const_iterator last)
+        : range_base(first, last) {
 
       }
 
     };
 
-    template <
-      typename FwdIter
-      >
-    struct host_range
-      : range_base<FwdIter> {
+    struct host_range : range_base {
 
       host_range() {
 
       }
 
-      host_range(FwdIter first, FwdIter last)
-        : range_base<FwdIter>(first, last) {
+      host_range(const_iterator first, const_iterator last)
+        : range_base(first, last) {
 
       }
 
     };
 
-    template <
-      typename FwdIter
-      >
-    struct port_range
-      : range_base<FwdIter> {
+    struct port_range : range_base {
 
       port_range() {
 
       }
 
-      port_range(FwdIter first, FwdIter last)
-        : range_base<FwdIter>(first, last) {
+      port_range(const_iterator first, const_iterator last)
+        : range_base(first, last) {
 
       }
 
     };
 
-    template <
-      typename FwdIter
-      >
-    struct path_range
-      : range_base<FwdIter> {
+    struct path_range : range_base {
 
       path_range() {
 
       }
 
-      path_range(FwdIter first, FwdIter last)
-        : range_base<FwdIter>(first, last) {
+      path_range(const_iterator first, const_iterator last)
+        : range_base(first, last) {
 
       }
 
     };
 
-    template <
-      typename FwdIter
-      >
-    struct query_range
-      : range_base<FwdIter> {
+    struct query_range : range_base {
 
       query_range() {
 
       }
 
-      query_range(FwdIter first, FwdIter last)
-        : range_base<FwdIter>(first, last) {
+      query_range(const_iterator first, const_iterator last)
+        : range_base(first, last) {
 
       }
 
     };
 
-    template <
-      typename FwdIter
-      >
-    struct fragment_range
-      : range_base<FwdIter> {
+    struct fragment_range : range_base {
 
       fragment_range() {
 
       }
 
-      fragment_range(FwdIter first, FwdIter last)
-        : range_base<FwdIter>(first, last) {
+      fragment_range(const_iterator first, const_iterator last)
+        : range_base(first, last) {
 
       }
 
