@@ -11,7 +11,6 @@
 #include <network/uri/decode.hpp>
 #include <iterator>
 
-
 BOOST_AUTO_TEST_CASE(encoding_test) {
     const std::string unencoded(" !\"#$%&\'()*");
     const std::string encoded("%20%21%22%23%24%25%26%27%28%29%2A");
@@ -28,4 +27,22 @@ BOOST_AUTO_TEST_CASE(decoding_test) {
     std::string instance;
     network::decode(encoded, std::back_inserter(instance));
     BOOST_CHECK_EQUAL(instance, unencoded);
+}
+
+BOOST_AUTO_TEST_CASE(wencoding_test) {
+    const std::wstring unencoded(L" !\"#$%&\'()*");
+    const std::wstring encoded(L"%20%21%22%23%24%25%26%27%28%29%2A");
+
+    std::wstring instance;
+    network::encode(unencoded, std::back_inserter(instance));
+    BOOST_CHECK(instance == encoded);
+}
+
+BOOST_AUTO_TEST_CASE(wdecoding_test) {
+    const std::wstring unencoded(L" !\"#$%&\'()*");
+    const std::wstring encoded(L"%20%21%22%23%24%25%26%27%28%29%2A");
+
+    std::wstring instance;
+    network::decode(encoded, std::back_inserter(instance));
+    BOOST_CHECK(instance == unencoded);
 }

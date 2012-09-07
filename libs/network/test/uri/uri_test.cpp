@@ -15,50 +15,50 @@
 #include <set>
 #include <boost/unordered_set.hpp>
 
-std::ostream &operator << (std::ostream &os, const network::uri::string_type &s) {
-	return os << std::string(std::begin(s), std::end(s));
+std::ostream &operator << (std::ostream &os, const std::wstring &s) {
+  return os << std::string(std::begin(s), std::end(s));
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_scheme_test) {
-    network::uri instance("http://www.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+  network::uri instance("http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::scheme(instance), "http");
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_user_info_test) {
-    network::uri instance("http://www.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::user_info(instance), "");
+  network::uri instance("http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::user_info(instance), "");
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_host_test) {
-    network::uri instance("http://www.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::host(instance), "www.example.com");
+  network::uri instance("http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::host(instance), "www.example.com");
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_port_test) {
-    network::uri instance("http://www.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::port(instance), "");
+  network::uri instance("http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::port(instance), "");
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_path_test) {
-    network::uri instance("http://www.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::path(instance), "/");
+  network::uri instance("http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::path(instance), "/");
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_query_test) {
-    network::uri instance("http://www.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::query(instance), "");
+  network::uri instance("http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::query(instance), "");
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_fragment_test) {
-    network::uri instance("http://www.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::fragment(instance), "");
+  network::uri instance("http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::fragment(instance), "");
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_value_semantics_test) {
@@ -75,207 +75,207 @@ BOOST_AUTO_TEST_CASE(basic_uri_value_semantics_test) {
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_range_scheme_test) {
-    network::uri instance("http://www.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(instance.scheme());
-    BOOST_CHECK(instance.begin() == std::begin(instance.scheme()));
-    BOOST_CHECK(boost::equal(instance.scheme(), boost::as_literal("http")));
+  network::uri instance("http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(instance.scheme());
+  BOOST_CHECK(instance.begin() == std::begin(instance.scheme()));
+  BOOST_CHECK(boost::equal(instance.scheme(), boost::as_literal("http")));
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_range_user_info_test) {
-    network::uri instance("http://www.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(!instance.user_info());
-    BOOST_CHECK(std::begin(instance.host()) == std::begin(instance.user_info()));
-    BOOST_CHECK(std::begin(instance.host()) == std::end(instance.user_info()));
+  network::uri instance("http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(!instance.user_info());
+  BOOST_CHECK(std::begin(instance.host()) == std::begin(instance.user_info()));
+  BOOST_CHECK(std::begin(instance.host()) == std::end(instance.user_info()));
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_range_host_test) {
-    network::uri instance("http://www.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(instance.host());
-    BOOST_CHECK(boost::equal(instance.host(), boost::as_literal("www.example.com")));
+  network::uri instance("http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(instance.host());
+  BOOST_CHECK(boost::equal(instance.host(), boost::as_literal("www.example.com")));
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_range_port_test) {
-    network::uri instance("http://www.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(!instance.port());
-    BOOST_CHECK(std::end(instance.host()) == std::begin(instance.port()));
-    BOOST_CHECK(std::end(instance.host()) == std::end(instance.port()));
+  network::uri instance("http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(!instance.port());
+  BOOST_CHECK(std::end(instance.host()) == std::begin(instance.port()));
+  BOOST_CHECK(std::end(instance.host()) == std::end(instance.port()));
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_range_path_test) {
-    network::uri instance("http://www.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(instance.path());
-    BOOST_CHECK(boost::equal(instance.path(), boost::as_literal("/")));
-    BOOST_CHECK(instance.end() == std::end(instance.path()));
+  network::uri instance("http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(instance.path());
+  BOOST_CHECK(boost::equal(instance.path(), boost::as_literal("/")));
+  BOOST_CHECK(instance.end() == std::end(instance.path()));
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_range_query_test) {
-    network::uri instance("http://www.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(!instance.query());
-    BOOST_CHECK(instance.end() == std::begin(instance.query()));
-    BOOST_CHECK(instance.end() == std::end(instance.query()));
+  network::uri instance("http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(!instance.query());
+  BOOST_CHECK(instance.end() == std::begin(instance.query()));
+  BOOST_CHECK(instance.end() == std::end(instance.query()));
 }
 
 BOOST_AUTO_TEST_CASE(basic_uri_range_fragment_test) {
-    network::uri instance("http://www.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(!instance.fragment());
-    BOOST_CHECK(instance.end() == std::begin(instance.fragment()));
-    BOOST_CHECK(instance.end() == std::end(instance.fragment()));
+  network::uri instance("http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(!instance.fragment());
+  BOOST_CHECK(instance.end() == std::begin(instance.fragment()));
+  BOOST_CHECK(instance.end() == std::end(instance.fragment()));
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_scheme_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::scheme(instance), "http");
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_user_info_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::user_info(instance), "user:password");
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::user_info(instance), "user:password");
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_host_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::host(instance), "www.example.com");
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::host(instance), "www.example.com");
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_port_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::port(instance), "80");
-    BOOST_CHECK(network::port_us(instance));
-    BOOST_CHECK_EQUAL(network::port_us(instance).get(), 80);
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::port(instance), "80");
+  BOOST_CHECK(network::port_us(instance));
+  BOOST_CHECK_EQUAL(network::port_us(instance).get(), 80);
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_path_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::path(instance), "/path");
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::path(instance), "/path");
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_query_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::query(instance), "query");
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::query(instance), "query");
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_fragment_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::fragment(instance), "fragment");
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::fragment(instance), "fragment");
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_range_scheme_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(instance.scheme());
-    BOOST_CHECK(instance.begin() == std::begin(instance.scheme()));
-    BOOST_CHECK(boost::equal(instance.scheme(), boost::as_literal("http")));
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(instance.scheme());
+  BOOST_CHECK(instance.begin() == std::begin(instance.scheme()));
+  BOOST_CHECK(boost::equal(instance.scheme(), boost::as_literal("http")));
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_range_user_info_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(instance.user_info());
-    BOOST_CHECK(boost::equal(instance.user_info(), boost::as_literal("user:password")));
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(instance.user_info());
+  BOOST_CHECK(boost::equal(instance.user_info(), boost::as_literal("user:password")));
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_range_host_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(instance.host());
-    BOOST_CHECK(boost::equal(instance.host(), boost::as_literal("www.example.com")));
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(instance.host());
+  BOOST_CHECK(boost::equal(instance.host(), boost::as_literal("www.example.com")));
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_range_port_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(instance.port());
-    BOOST_CHECK(boost::equal(instance.port(), boost::as_literal("80")));
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(instance.port());
+  BOOST_CHECK(boost::equal(instance.port(), boost::as_literal("80")));
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_range_path_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(instance.path());
-    BOOST_CHECK(boost::equal(instance.path(), boost::as_literal("/path")));
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(instance.path());
+  BOOST_CHECK(boost::equal(instance.path(), boost::as_literal("/path")));
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_range_query_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(instance.query());
-    BOOST_CHECK(boost::equal(instance.query(), boost::as_literal("query")));
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(instance.query());
+  BOOST_CHECK(boost::equal(instance.query(), boost::as_literal("query")));
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_range_fragment_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(instance.fragment());
-    BOOST_CHECK(boost::equal(instance.fragment(), boost::as_literal("fragment")));
-    BOOST_CHECK(instance.end() == std::end(instance.fragment()));
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(instance.fragment());
+  BOOST_CHECK(boost::equal(instance.fragment(), boost::as_literal("fragment")));
+  BOOST_CHECK(instance.end() == std::end(instance.fragment()));
 }
 
 BOOST_AUTO_TEST_CASE(mailto_test) {
-    network::uri instance("mailto:john.doe@example.com");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::scheme(instance), "mailto");
-    BOOST_CHECK_EQUAL(network::path(instance), "john.doe@example.com");
+  network::uri instance("mailto:john.doe@example.com");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::scheme(instance), "mailto");
+  BOOST_CHECK_EQUAL(network::path(instance), "john.doe@example.com");
 }
 
 BOOST_AUTO_TEST_CASE(file_test) {
-    network::uri instance("file:///bin/bash");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::scheme(instance), "file");
-    BOOST_CHECK_EQUAL(network::path(instance), "/bin/bash");
+  network::uri instance("file:///bin/bash");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::scheme(instance), "file");
+  BOOST_CHECK_EQUAL(network::path(instance), "/bin/bash");
 }
 
 BOOST_AUTO_TEST_CASE(xmpp_test) {
-    network::uri instance("xmpp:example-node@example.com?message;subject=Hello%20World");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::scheme(instance), "xmpp");
-    BOOST_CHECK_EQUAL(network::path(instance), "example-node@example.com");
-    BOOST_CHECK_EQUAL(network::query(instance), "message;subject=Hello%20World");
+  network::uri instance("xmpp:example-node@example.com?message;subject=Hello%20World");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::scheme(instance), "xmpp");
+  BOOST_CHECK_EQUAL(network::path(instance), "example-node@example.com");
+  BOOST_CHECK_EQUAL(network::query(instance), "message;subject=Hello%20World");
 }
 
 BOOST_AUTO_TEST_CASE(ipv4_address_test) {
-    network::uri instance("http://129.79.245.252/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
-    BOOST_CHECK_EQUAL(network::host(instance), "129.79.245.252");
-    BOOST_CHECK_EQUAL(network::path(instance), "/");
+  network::uri instance("http://129.79.245.252/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+  BOOST_CHECK_EQUAL(network::host(instance), "129.79.245.252");
+  BOOST_CHECK_EQUAL(network::path(instance), "/");
 }
 
 BOOST_AUTO_TEST_CASE(ipv4_loopback_test) {
-    network::uri instance("http://127.0.0.1/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
-    BOOST_CHECK_EQUAL(network::host(instance), "127.0.0.1");
-    BOOST_CHECK_EQUAL(network::path(instance), "/");
+  network::uri instance("http://127.0.0.1/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+  BOOST_CHECK_EQUAL(network::host(instance), "127.0.0.1");
+  BOOST_CHECK_EQUAL(network::path(instance), "/");
 }
 
 BOOST_AUTO_TEST_CASE(ipv6_address_test_1) {
-    network::uri instance("http://[1080:0:0:0:8:800:200C:417A]/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
-    BOOST_CHECK_EQUAL(network::host(instance), "[1080:0:0:0:8:800:200C:417A]");
-    BOOST_CHECK_EQUAL(network::path(instance), "/");
+  network::uri instance("http://[1080:0:0:0:8:800:200C:417A]/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+  BOOST_CHECK_EQUAL(network::host(instance), "[1080:0:0:0:8:800:200C:417A]");
+  BOOST_CHECK_EQUAL(network::path(instance), "/");
 }
 
 BOOST_AUTO_TEST_CASE(ipv6_address_test_2) {
-    network::uri instance("http://[2001:db8:85a3:8d3:1319:8a2e:370:7348]/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
-    BOOST_CHECK_EQUAL(network::host(instance), "[2001:db8:85a3:8d3:1319:8a2e:370:7348]");
-    BOOST_CHECK_EQUAL(network::path(instance), "/");
+  network::uri instance("http://[2001:db8:85a3:8d3:1319:8a2e:370:7348]/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+  BOOST_CHECK_EQUAL(network::host(instance), "[2001:db8:85a3:8d3:1319:8a2e:370:7348]");
+  BOOST_CHECK_EQUAL(network::path(instance), "/");
 }
 
 BOOST_AUTO_TEST_CASE(ipv6_address_test_3) {
@@ -399,141 +399,141 @@ BOOST_AUTO_TEST_CASE(ipv6_v4inv6_test_2) {
 }
 
 BOOST_AUTO_TEST_CASE(ftp_test) {
-    network::uri instance("ftp://john.doe@ftp.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::scheme(instance), "ftp");
-    BOOST_CHECK_EQUAL(network::user_info(instance), "john.doe");
-    BOOST_CHECK_EQUAL(network::host(instance), "ftp.example.com");
-    BOOST_CHECK_EQUAL(network::path(instance), "/");
+  network::uri instance("ftp://john.doe@ftp.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::scheme(instance), "ftp");
+  BOOST_CHECK_EQUAL(network::user_info(instance), "john.doe");
+  BOOST_CHECK_EQUAL(network::host(instance), "ftp.example.com");
+  BOOST_CHECK_EQUAL(network::path(instance), "/");
 }
 
 BOOST_AUTO_TEST_CASE(news_test) {
-    network::uri instance("news:comp.infosystems.www.servers.unix");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::scheme(instance), "news");
-    BOOST_CHECK_EQUAL(network::path(instance), "comp.infosystems.www.servers.unix");
+  network::uri instance("news:comp.infosystems.www.servers.unix");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::scheme(instance), "news");
+  BOOST_CHECK_EQUAL(network::path(instance), "comp.infosystems.www.servers.unix");
 }
 
 BOOST_AUTO_TEST_CASE(tel_test) {
-    network::uri instance("tel:+1-816-555-1212");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::scheme(instance), "tel");
-    BOOST_CHECK_EQUAL(network::path(instance), "+1-816-555-1212");
+  network::uri instance("tel:+1-816-555-1212");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::scheme(instance), "tel");
+  BOOST_CHECK_EQUAL(network::path(instance), "+1-816-555-1212");
 }
 
 BOOST_AUTO_TEST_CASE(encoded_uri_test) {
-    network::uri instance("http://www.example.com/Path%20With%20%28Some%29%20Encoded%20Characters%21");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
-    BOOST_CHECK_EQUAL(network::host(instance), "www.example.com");
-    BOOST_CHECK_EQUAL(network::path(instance), "/Path%20With%20%28Some%29%20Encoded%20Characters%21");
-    //BOOST_CHECK_EQUAL(network::decoded(instance.path()), "/Path With (Some) Encoded Characters!");
+  network::uri instance("http://www.example.com/Path%20With%20%28Some%29%20Encoded%20Characters%21");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+  BOOST_CHECK_EQUAL(network::host(instance), "www.example.com");
+  BOOST_CHECK_EQUAL(network::path(instance), "/Path%20With%20%28Some%29%20Encoded%20Characters%21");
+  //BOOST_CHECK_EQUAL(network::decoded(instance.path()), "/Path With (Some) Encoded Characters!");
 }
 
 BOOST_AUTO_TEST_CASE(copy_constructor_test) {
-    network::uri instance("http://www.example.com/");
-    network::uri copy = instance;
-    BOOST_CHECK_EQUAL(instance, copy);
+  network::uri instance("http://www.example.com/");
+  network::uri copy = instance;
+  BOOST_CHECK_EQUAL(instance, copy);
 }
 
 BOOST_AUTO_TEST_CASE(assignment_test) {
-    network::uri instance("http://www.example.com/");
-    network::uri copy;
-    copy = instance;
-    BOOST_CHECK_EQUAL(instance, copy);
+  network::uri instance("http://www.example.com/");
+  network::uri copy;
+  copy = instance;
+  BOOST_CHECK_EQUAL(instance, copy);
 }
 
 BOOST_AUTO_TEST_CASE(swap_test) {
-    network::uri instance("http://www.example.com/");
-    network::uri copy("http://www.example.org/");
-    network::swap(instance, copy);
-    BOOST_CHECK_EQUAL(instance.string(), "http://www.example.org/");
-    BOOST_CHECK_EQUAL(copy.string(), "http://www.example.com/");
+  network::uri instance("http://www.example.com/");
+  network::uri copy("http://www.example.org/");
+  network::swap(instance, copy);
+  BOOST_CHECK_EQUAL(instance.string(), "http://www.example.org/");
+  BOOST_CHECK_EQUAL(copy.string(), "http://www.example.com/");
 }
 
 BOOST_AUTO_TEST_CASE(less_than_test) {
-    // uri_1 is lexicographically less than uri_2
-    network::uri uri_1("http://www.example.com/");
-    network::uri uri_2("http://www.example.org/");
-    BOOST_CHECK_PREDICATE(std::less<network::uri>(), (uri_1)(uri_2));
-    //BOOST_CHECK(uri_1 < uri_2);
+  // uri_1 is lexicographically less than uri_2
+  network::uri uri_1("http://www.example.com/");
+  network::uri uri_2("http://www.example.org/");
+  BOOST_CHECK_PREDICATE(std::less<network::uri>(), (uri_1)(uri_2));
+  //BOOST_CHECK(uri_1 < uri_2);
 }
 
 BOOST_AUTO_TEST_CASE(username_test) {
-    network::uri instance("ftp://john.doe@ftp.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    //BOOST_CHECK_EQUAL(network::username(instance), "john.doe");
+  network::uri instance("ftp://john.doe@ftp.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  //BOOST_CHECK_EQUAL(network::username(instance), "john.doe");
 }
 
 BOOST_AUTO_TEST_CASE(pasword_test) {
-    network::uri instance("ftp://john.doe:password@ftp.example.com/");
-    BOOST_REQUIRE(network::valid(instance));
-    //BOOST_CHECK_EQUAL(network::password(instance), "password");
+  network::uri instance("ftp://john.doe:password@ftp.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  //BOOST_CHECK_EQUAL(network::password(instance), "password");
 }
 
 BOOST_AUTO_TEST_CASE(hierarchical_part_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::hierarchical_part(instance), "user:password@www.example.com:80/path");
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::hierarchical_part(instance), "user:password@www.example.com:80/path");
 }
 
 BOOST_AUTO_TEST_CASE(partial_hierarchical_part_test) {
-    network::uri instance("http://www.example.com?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::hierarchical_part(instance), "www.example.com");
+  network::uri instance("http://www.example.com?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::hierarchical_part(instance), "www.example.com");
 }
 
 BOOST_AUTO_TEST_CASE(authority_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::authority(instance), "user:password@www.example.com:80");
+  network::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::authority(instance), "user:password@www.example.com:80");
 }
 
 BOOST_AUTO_TEST_CASE(partial_authority_test) {
-    network::uri instance("http://www.example.com/path?query#fragment");
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK_EQUAL(network::authority(instance), "www.example.com");
+  network::uri instance("http://www.example.com/path?query#fragment");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(network::authority(instance), "www.example.com");
 }
 
 BOOST_AUTO_TEST_CASE(http_query_map_test) {
-    network::uri instance("http://user:password@www.example.com:80/path?query=something#fragment");
-    BOOST_REQUIRE(network::valid(instance));
+  network::uri instance("http://user:password@www.example.com:80/path?query=something#fragment");
+  BOOST_REQUIRE(network::valid(instance));
 
-    std::map<std::string, std::string> queries;
-    network::query_map(instance, queries);
-    BOOST_REQUIRE_EQUAL(queries.size(), std::size_t(1));
-    BOOST_CHECK_EQUAL(queries.begin()->first, "query");
-    BOOST_CHECK_EQUAL(queries.begin()->second, "something");
+  std::map<std::string, std::string> queries;
+  network::query_map(instance, queries);
+  BOOST_REQUIRE_EQUAL(queries.size(), std::size_t(1));
+  BOOST_CHECK_EQUAL(queries.begin()->first, "query");
+  BOOST_CHECK_EQUAL(queries.begin()->second, "something");
 }
 
 BOOST_AUTO_TEST_CASE(xmpp_query_map_test) {
-    network::uri instance("xmpp:example-node@example.com?message;subject=Hello%20World");
-    BOOST_REQUIRE(network::valid(instance));
+  network::uri instance("xmpp:example-node@example.com?message;subject=Hello%20World");
+  BOOST_REQUIRE(network::valid(instance));
 
-    std::map<std::string, std::string> queries;
-    network::query_map(instance, queries);
-    BOOST_REQUIRE_EQUAL(queries.size(), std::size_t(2));
-    BOOST_CHECK_EQUAL(queries.begin()->first, "message");
-    BOOST_CHECK_EQUAL(queries.begin()->second, "");
-    BOOST_CHECK_EQUAL((++queries.begin())->first, "subject");
-    BOOST_CHECK_EQUAL((++queries.begin())->second, "Hello%20World");
+  std::map<std::string, std::string> queries;
+  network::query_map(instance, queries);
+  BOOST_REQUIRE_EQUAL(queries.size(), std::size_t(2));
+  BOOST_CHECK_EQUAL(queries.begin()->first, "message");
+  BOOST_CHECK_EQUAL(queries.begin()->second, "");
+  BOOST_CHECK_EQUAL((++queries.begin())->first, "subject");
+  BOOST_CHECK_EQUAL((++queries.begin())->second, "Hello%20World");
 }
 
 BOOST_AUTO_TEST_CASE(range_test) {
-    const std::string url("http://www.example.com/");
-    network::uri instance(url);
-    BOOST_REQUIRE(network::valid(instance));
-    BOOST_CHECK(boost::equal(instance, url));
+  const std::string url("http://www.example.com/");
+  network::uri instance(url);
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(boost::equal(instance, url));
 }
 
 BOOST_AUTO_TEST_CASE(issue_67_test) {
-	// https://github.com/cpp-netlib/cpp-netlib/issues/67
-    const std::string site_name("http://www.google.com");
-    network::uri bar0;
-    network::uri bar1 = site_name;
-    bar0 = site_name;
-    BOOST_CHECK(network::is_valid(bar0));
-    BOOST_CHECK(network::is_valid(bar1));
+  // https://github.com/cpp-netlib/cpp-netlib/issues/67
+  const std::string site_name("http://www.google.com");
+  network::uri bar0;
+  network::uri bar1 = site_name;
+  bar0 = site_name;
+  BOOST_CHECK(network::is_valid(bar0));
+  BOOST_CHECK(network::is_valid(bar1));
 }
 
 //BOOST_AUTO_TEST_CASE(from_parts_1) {
@@ -562,23 +562,35 @@ BOOST_AUTO_TEST_CASE(issue_67_test) {
 //}
 
 BOOST_AUTO_TEST_CASE(issue_104_test) {
-	// https://github.com/cpp-netlib/cpp-netlib/issues/104
-	boost::scoped_ptr<network::uri> instance(new network::uri("http://www.example.com/"));
-	network::uri copy = *instance;
-	instance.reset();
-	BOOST_CHECK_EQUAL(network::scheme(copy), "http");
+  // https://github.com/cpp-netlib/cpp-netlib/issues/104
+  boost::scoped_ptr<network::uri> instance(new network::uri("http://www.example.com/"));
+  network::uri copy = *instance;
+  instance.reset();
+  BOOST_CHECK_EQUAL(network::scheme(copy), "http");
 }
 
 BOOST_AUTO_TEST_CASE(uri_set_test) {
-    std::set<network::uri> uri_set;
-    uri_set.insert(network::uri("http://www.example.com/"));
-    BOOST_REQUIRE(!uri_set.empty());
-    BOOST_CHECK_EQUAL((*uri_set.begin()), network::uri("http://www.example.com/"));
+  std::set<network::uri> uri_set;
+  uri_set.insert(network::uri("http://www.example.com/"));
+  BOOST_REQUIRE(!uri_set.empty());
+  BOOST_CHECK_EQUAL((*uri_set.begin()), network::uri("http://www.example.com/"));
 }
 
 BOOST_AUTO_TEST_CASE(uri_unordered_set_test) {
-    boost::unordered_set<network::uri> uri_set;
-    uri_set.insert(network::uri("http://www.example.com/"));
-    BOOST_REQUIRE(!uri_set.empty());
-    BOOST_CHECK_EQUAL((*uri_set.begin()), network::uri("http://www.example.com/"));
+  boost::unordered_set<network::uri> uri_set;
+  uri_set.insert(network::uri("http://www.example.com/"));
+  BOOST_REQUIRE(!uri_set.empty());
+  BOOST_CHECK_EQUAL((*uri_set.begin()), network::uri("http://www.example.com/"));
+}
+
+BOOST_AUTO_TEST_CASE(construct_using_wstring_test) {
+  network::uri instance(L"http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK_EQUAL(instance.string(), "http://www.example.com/");
+}
+
+BOOST_AUTO_TEST_CASE(construct_using_wstring_check_accessor_test) {
+  network::uri instance(L"http://www.example.com/");
+  BOOST_REQUIRE(network::valid(instance));
+  BOOST_CHECK(instance.wstring() == L"http://www.example.com/");
 }

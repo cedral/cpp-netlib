@@ -21,6 +21,7 @@ namespace network {
 # endif // defined(BOOST_WINDOWS)
 
       typedef std::basic_string<value_type> string_type;
+      typedef std::codecvt<wchar_t, char, std::mbstate_t> codecvt_type;
       typedef string_type::const_iterator iterator;
       typedef string_type::const_iterator const_iterator;
 
@@ -58,6 +59,13 @@ namespace network {
       operator unspecified_bool_type () const {
         return !empty()? &range_base::empty : nullptr;
       }
+
+      string_type native() const {
+	return string_type(first_, last_);
+      }
+
+      // encoding conversion
+      static const codecvt_type &codecvt();
 
     private:
 

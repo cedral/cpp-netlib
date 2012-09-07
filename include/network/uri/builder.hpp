@@ -33,9 +33,9 @@ namespace network {
       return *this;
     }
 
-	builder &scheme(const std::wstring &scheme) {
-		return this->scheme(std::string(std::begin(scheme), std::end(scheme)));
-	}
+    builder &scheme(const std::wstring &scheme) {
+      return this->scheme(std::string(std::begin(scheme), std::end(scheme)));
+    }
 
     builder &user_info(const std::string &user_info) {
       uri_.uri_.append(std::begin(user_info), std::end(user_info));
@@ -44,9 +44,9 @@ namespace network {
       return *this;
     }
 
-	builder &user_info(const std::wstring &user_info) {
-		return this->user_info(std::string(std::begin(user_info), std::end(user_info)));
-	}
+    builder &user_info(const std::wstring &user_info) {
+      return this->user_info(std::string(std::begin(user_info), std::end(user_info)));
+    }
 
     builder &host(const std::string &host) {
       uri_.uri_.append(std::begin(host), std::end(host));
@@ -54,9 +54,9 @@ namespace network {
       return *this;
     }
 
-	builder &host(const std::wstring &host) {
-		return this->host(std::string(std::begin(host), std::end(host)));
-	}
+    builder &host(const std::wstring &host) {
+      return this->host(std::string(std::begin(host), std::end(host)));
+    }
 
     builder &host(const boost::asio::ip::address &host) {
       this->host(host.to_string());
@@ -83,9 +83,9 @@ namespace network {
       return *this;
     }
 
-	builder &port(const std::wstring &port) {
-		return this->port(std::string(std::begin(port), std::end(port)));
-	}
+    builder &port(const std::wstring &port) {
+      return this->port(std::string(std::begin(port), std::end(port)));
+    }
 
     builder &port(uint16_t port) {
       return this->port(boost::lexical_cast<std::string>(port));
@@ -97,9 +97,9 @@ namespace network {
       return *this;
     }
 
-	builder &path(const std::wstring &path) {
-		return this->path(std::string(std::begin(path), std::end(path)));
-	}
+    builder &path(const std::wstring &path) {
+      return this->path(std::string(std::begin(path), std::end(path)));
+    }
 
     builder &encoded_path(const std::string &path) {
       std::string encoded_path;
@@ -114,9 +114,9 @@ namespace network {
       return *this;
     }
 
-	builder &query(const std::wstring &query) {
-		return this->query(std::string(std::begin(query), std::end(query)));
-	}
+    builder &query(const std::wstring &query) {
+      return this->query(std::string(std::begin(query), std::end(query)));
+    }
 
     builder &query(const std::string &key, const std::string &value) {
       if (!uri_.query()) {
@@ -139,9 +139,9 @@ namespace network {
       return *this;
     }
 
-	builder &fragment(const std::wstring &fragment) {
-		return this->fragment(std::string(std::begin(fragment), std::end(fragment)));
-	}
+    builder &fragment(const std::wstring &fragment) {
+      return this->fragment(std::string(std::begin(fragment), std::end(fragment)));
+    }
 
   private:
 

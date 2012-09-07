@@ -84,4 +84,10 @@ namespace network {
     static std::locale posix_lazy_initialization(uri::imbue(std::locale("")));
     return *codecvt_facet_ptr;
   }
+
+  namespace detail {
+    const range_base::codecvt_type &range_base::codecvt() {
+      return uri::codecvt();
+    }
+  } // namespace detail
 } // namespace network

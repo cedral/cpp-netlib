@@ -223,6 +223,13 @@ namespace network {
       return std::string(std::begin(uri_), std::end(uri_));
     }
 
+    template <
+      class String
+      >
+    String string(const codecvt_type &cvt = codecvt()) const {
+      return String(std::begin(uri_), std::end(uri_));
+    }
+
     std::wstring wstring(const codecvt_type &cvt = codecvt()) const {
       return std::wstring(std::begin(uri_), std::end(uri_));
     }
