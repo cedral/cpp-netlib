@@ -14,8 +14,8 @@
 
 
 using namespace std;
-using namespace boost::network;
-using namespace boost::network::http;
+using namespace network;
+using namespace network::http;
 
 
 int main(int argc, const char *argv[]) {
